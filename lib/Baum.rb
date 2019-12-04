@@ -48,7 +48,7 @@ class Baum
   end
 
   def staerkeBoosten()
-    @staerkeBoost = true unless koenig?()
+    @staerkeBoost = true
   end
 
   def staerkeKoenig?()
@@ -56,7 +56,7 @@ class Baum
   end
   
   def geschwindigkeitBoosten()
-    @geschwindigkeitsBoost = true unless koenig?()
+    @geschwindigkeitsBoost = true
   end
 
   def geschwindigkeitKoenig?()
@@ -64,7 +64,7 @@ class Baum
   end
   
   def reichweiteBoosten()
-    @reichweiteBoost = true unless koenig?()
+    @reichweiteBoost = true
   end
 
   def reichweiteKoenig?()
@@ -90,7 +90,7 @@ class Baum
     r += ReichweiteBoostLevel3 if @upgrades.upgrade?(Reichweite3Sonderfaehigkeit.bedingung())
     r += ReichweiteBoostLevel4 if @upgrades.upgrade?(Reichweite4Sonderfaehigkeit.bedingung())
     r += AllroundReichweiteBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
-    r += KoenigsReichweiteBoost if @reichweiteBoost and not koenig?()
+    r += KoenigsReichweiteBoost if @reichweiteBoost 
    return r
   end
   
@@ -148,7 +148,6 @@ class Baum
   
   def anvisieren(gegnerArray)
     return unless geladen?()
-    return if koenig?()
     if @upgrades.upgrade?(SplashSonderfaehigkeit.bedingung)
       return zielenMultipel(gegnerArray)
     else
