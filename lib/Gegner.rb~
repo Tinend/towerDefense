@@ -1,0 +1,7 @@
+class Gegner
+  def initialize(lp, maxLp)
+    @lp = lp
+    @maxLp = maxLp
+  end
+  attr_reader :lp, :maxLp
+end

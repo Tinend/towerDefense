@@ -1,0 +1,51 @@
+require 'colorize'
+$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'Spielfeld'
+require 'WegStueck'
+require 'Feind'
+require 'Baum'
+require 'Feld'
+
+def rot(string)
+  string.red
+end
+
+def gruen(string)
+  string.gruen
+end
+
+laenge = 70
+felder = [[], []]
+wegStueck = nil
+laenge.times do |i|
+  felder[0].push(Feld.new())
+  wegStueck = WegStueck.new(wegStueck, i)
+  felder[1].push(wegStueck)
+end
+
+spielfeld = Spielfeld.new(felder, wegStueck)
+gewonnen = false
+runde = 0
+until gewonnen
+  feinde = []
+  5.times do
+    feinde.push(spielfeld.neuerFeind(100 * 12 ** runde/ 10 ** runde))
+    feinde.each do |feind|
+      feind.laufen()
+    end
+  end
+  spielfeld.pflanzeBaum([runde + 1, 0], Baum.new(4, 100 * 11 ** runde / 10 ** runde, "A".green))
+  runde += 1
+  until gewonnen or feinde.length == 0
+    puts runde
+    feinde.each do |feind|
+      puts feind.anzeigen()
+      feind.laufen()
+    end
+    puts spielfeld.anzeigen()
+    spielfeld.schiessen()
+    feinde.delete_if {|feind| feind.leben <= 0}
+    gewonnen = true if feinde.any? {|feind| feind.amZiel?()}
+    gets
+  end
+end

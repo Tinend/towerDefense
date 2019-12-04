@@ -1,0 +1,29 @@
+GelbGruen = 102
+RotBlau = 103
+WeissBlau = 104
+GelbWeiss = 105
+RotWeiss = 106
+WeissGruen = 107
+CyanWeiss = 108
+CyanGruen = 109
+RotSchwarz = 110
+MagentaSchwarz = 111
+GelbSchwarz = 112
+GruenSchwarz = 113
+CyanSchwarz = 114
+def farben()
+  Curses.init_pair(GelbGruen, COLOR_YELLOW, COLOR_GREEN)
+  Curses.init_pair(RotBlau, COLOR_RED, COLOR_BLUE)
+  Curses.init_pair(WeissBlau, COLOR_WHITE, COLOR_BLUE)
+  Curses.init_pair(GelbWeiss, COLOR_YELLOW, COLOR_WHITE)
+  Curses.init_pair(RotWeiss, COLOR_RED, COLOR_WHITE)
+  Curses.init_pair(WeissGruen, COLOR_WHITE, COLOR_GREEN)
+  Curses.init_pair(CyanWeiss, COLOR_CYAN, COLOR_WHITE)
+  Curses.init_pair(CyanGruen, COLOR_CYAN, COLOR_GREEN)
+  Curses.init_pair(RotSchwarz, COLOR_RED, COLOR_BLACK)
+  Curses.init_pair(MagentaSchwarz, COLOR_MAGENTA, COLOR_BLACK)
+  Curses.init_pair(GelbSchwarz, COLOR_YELLOW, COLOR_BLACK)
+  Curses.init_pair(GruenSchwarz, COLOR_GREEN, COLOR_BLACK)
+  Curses.init_pair(CyanSchwarz, COLOR_CYAN, COLOR_BLACK)
+end
+#:COLOR_BLACK, :COLOR_BLUE, :COLOR_CYAN, :COLOR_GREEN, :COLOR_MAGENTA, :COLOR_RED, :COLOR_WHITE, :COLOR_YELLOW

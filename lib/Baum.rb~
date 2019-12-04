@@ -1,0 +1,165 @@
+require 'Upgrades'
+require 'GegnerSortierer'
+require 'ordnung/StandardGegnerOrdnung'
+require 'ordnung/VerlangsamungsGegnerOrdnung'
+require 'ordnung/VergiftungsGegnerOrdnung'
+require 'ordnung/VereisungsGegnerOrdnung'
+require 'ordnung/MultiOrdnung'
+require 'Sonderfaehigkeiten'
+
+class Baum
+  MaxLaden = 10
+  SchnellLaden = 7
+  GrundSchaden = 10
+  EffektivBonus = 5
+  IneffektivMalus = 2
+  StaerkeBonus = 1.5
+  ReichweiteBoostLevel1 = 1
+  ReichweiteBoostLevel2 = 2
+  EffektivBoost = 4
+  DoppelWkeit = 50
+  VereisungsWkeit = 1
+  
+  def initialize(reichweite, position)
+    @reichweite = reichweite
+    @upgrades = Upgrades.new()
+    @geladen = MaxLaden
+    @position = [0, 0]
+  end
+
+  def pflanzen(position)
+    @position = position.dup
+  end
+
+  def reichweite()
+    r = @reichweite
+    r += ReichweiteBoostLevel1 if @upgrades.upgrade?(ReichweiteSonderfaehigkeit.bedingung())
+    r += ReichweiteBoostLevel2 if @upgrades.upgrade?(Reichweite2Sonderfaehigkeit.bedingung())
+    return r
+  end
+  
+  def laden()
+    @geladen += 1
+  end
+
+  def maxLaden()
+    return SchnellLaden if @upgrades.upgrade?(SchnellLadenSondefaehigkeit.bedingung)
+    MaxLaden
+  end
+
+  def entladen()
+    @geladen -= maxLaden()
+  end
+
+  def nichtUeberladen()
+    @geladen = [maxLaden(), @geladen].min
+  end
+  
+  def geladen?()
+    @reichweite > 0 and @geladen >= maxLaden()
+  end
+
+  def zielenEinzel(gegnerArray)
+    if @upgrades.upgrade?(VerlangsamungsSonderfaehigkeit.bedingung)
+      gegnerSortierer = GegnerSortierer.new(VerlangsamungsGegnerOrdnung)
+    elsif @upgrades.upgrade?(VergiftungsSonderfaehigkeit.bedingung)
+      gegnerSortierer = GegnerSortierer.new(VergiftungsGegnerOrdnung)
+    elsif @upgrades.upgrade?(VereisungsSonderfaehigkeit.bedingung)
+      gegnerSortierer = GegnerSortierer.new(VereisungsGegnerOrdnung)
+    else
+      gegnerSortierer = GegnerSortierer.new(StandardGegnerOrdnung)
+    end
+    gegnerSortierer.zielFinden(@position, reichweite(), gegnerArray)
+  end
+
+  def zielenMultipel(gegnerArray)
+    gegnerSortierer = GegnerSortierer.new(MultiOrdnung)
+    ziele = gegnerSortierer.multiZielFinden(@position, reichweite(), gegnerArray)
+    ziele.each do |ziel|
+      schiessen(ziel)
+    end
+  end
+  
+  def anvisieren(gegnerArray)
+    return unless geladen?()
+    if @upgrades.upgrade?(SplashSonderfaehigkeit.bedingung)
+      zielenMultipel(gegnerArray)
+    else
+      ziel = zielenEinzel(gegnerArray)
+      return if ziel == nil
+      schiessen(ziel)
+      @geladen -= maxLaden()
+    end
+  end
+
+  def schiessen(ziel)
+    schaden = berechneSchaden(ziel.typ)
+    schaden *= 2 if rand(100) <= DoppelWkeit and @upgrades.upgrade?(DoppelterSchadenSonderfaehigkeit.bedingung)
+    ziel.leben -= schaden
+    ziel.verlangsamen() if @upgrades.upgrade?(VerlangsamungsSonderfaehigkeit.bedingung)
+    ziel.vergiften(schaden) if @upgrades.upgrade?(VergiftungsSonderfaehigkeit.bedingung)
+    ziel.vereisen() if @upgrades.upgrade?(VereisungsSonderfaehigkeit.bedingung) and rand(100) < VereisungsWkeit
+  end
+  
+  def berechneSchaden(typ)
+    schaden = GrundSchaden
+    effektivitaetsFaktor = @upgrades.effektivitaetsfaktor()
+    effektivitaetsFaktor = EffektivBoost if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)
+    if @upgrades.upgrades.length >= 1
+      schaden += EffektivBonus * effektivitaetsFaktor if effektiv?(@upgrades.typ, typ)
+      schaden -= IneffektivMalus * effektivitaetsFaktor if ineffektiv?(@upgrades.typ, typ)
+    end
+    schaden *= StaerkeBonus if @upgrades.upgrade?(StaerkeSonderfaehigkeit.bedingung)
+    (schaden + 0.5).to_i
+  end
+
+  def effektiv?(angriffsTyp, verteidigungsTyp)
+    (angriffsTyp == :pflanze and verteidigungsTyp == :wasser) or (angriffsTyp == :wasser and verteidigungsTyp == :feuer) or (angriffsTyp == :feuer and verteidigungsTyp == :pflanze)
+  end
+
+  def ineffektiv?(angriffsTyp, verteidigungsTyp)
+    effektiv?(verteidigungsTyp, angriffsTyp)
+  end
+  
+  def level()
+    @upgrades.level()
+  end
+  
+  def upgraden(typ)
+    @upgrades.upgraden(typ)
+  end
+
+  def downgraden()
+    @upgrades.downgraden()
+  end
+
+  def vordergrundFarbe(x, y)
+    Magenta
+  end
+
+  def upgradeFarbe(upgradeNummer)
+    @upgrades.upgradeFarbe(upgradeNummer)
+  end
+  
+  def hintergrundFarbe(x, y, farbe)
+    return farbe if y == 1 or x == 2
+    upgradeNummer = y + x / 3
+    @upgrades.upgradeFarbe(upgradeNummer, farbe)
+  end
+
+  def zeichen(x, y)
+    if x == 2 and y == 1
+      return "O"
+    elsif x == 2
+      return "|"
+    elsif y == 1
+      return "-"
+    else
+      return " "
+    end
+  end
+
+  def sonderfaehigkeiten()
+    @upgrades.sonderfaehigkeiten
+  end
+end

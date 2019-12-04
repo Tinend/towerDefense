@@ -1,0 +1,45 @@
+require 'Feind'
+
+class WegStueck
+  def initialize(naechstes, nr)
+    @nr = nr
+    @naechstes = naechstes
+    @feinde = []
+    @position = [0, 0]
+  end
+
+  attr_reader :nr, :naechstes
+  attr_accessor :feinde, :position
+
+  def nummern
+    [@nr]
+  end
+  
+  def farbe()
+    if @feinde == []
+      return :weiss
+    else
+      return :rot
+    end
+  end
+  
+  def istWeg?()
+    true
+  end
+
+  def hatFeind?() 
+    (@feinde.length > 0)
+  end
+  
+  def leeren()
+    @feinde.delete_if {|feind| feind.leben <= 0}
+  end
+
+  def geeignet?()
+    @feinde.length > 0
+  end
+
+  def wegStueck()
+    self
+  end
+end

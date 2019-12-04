@@ -1,0 +1,10 @@
+class GegnerOrdnung
+  def initialize(gegner)
+    @gegner = gegner
+  end
+
+  attr_reader :ordnung
+  
+  def <=>(ordnung)
+  end
+end

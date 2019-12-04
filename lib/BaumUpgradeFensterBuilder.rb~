@@ -1,0 +1,20 @@
+require 'BaumUpgradeFenster'
+
+class BaumUpgradeFensterBuilder
+  def initialize()
+  end
+
+  def waehlen()
+    begin
+      @fenster.oeffnen()
+      wahl = @fenster.auswaehlen
+      baum.waehlen(wahl)
+    ensure
+      @fenster.schliessen()
+    end
+  end
+  
+  def erstelleAnzeige(hoehe, breite, verschiebungy, verschiebungx, hauptfenster, baum)
+    @fenster = MUF.new(hoehe, breite, verschiebungy, verschiebungx, hauptfenster, baum)
+  end
+end

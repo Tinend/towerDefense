@@ -1,0 +1,8 @@
+require 'Baum'
+
+class BaumTyp
+  def initialize(reichweite, staerke)
+    @reichweite = reichweite
+    @staerke = staerke
+  end
+end

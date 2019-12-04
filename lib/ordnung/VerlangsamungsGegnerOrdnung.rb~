@@ -1,0 +1,7 @@
+require 'GegnerOrdnung'
+
+class VerlangsamungsGegnerOrdnung < GegnerOrdnung
+  def <=>(ordnung)
+    @gegner.laufDistanz <=> ordnung.gegner.laufDistanz
+  end
+end

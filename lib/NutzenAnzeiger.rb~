@@ -1,0 +1,50 @@
+class NutzenAnzeiger
+  def initialize()
+  end
+  
+  def erstelle(hoehe, breite, verschiebungy, verschiebungx, elternFenster)
+    @hoehe = hoehe
+    @breite = breite
+    @elternFenster = elternFenster
+    @verschiebungy = verschiebungy
+    @verschiebungx = verschiebungx
+    @fensterBreite = 80
+    @fensterHoehe = 40
+    @wahl = 0
+  end
+
+  def erneuern()
+    @elternFenster.erneuern()
+    anzeigen()
+  end
+
+  def anzeigen()
+    @fenster.setpos(0,0)
+    @fenster.addstr("/" + "-" * (@fensterBreite - 2) + "\\")
+    (@fensterHoehe - 2).times do |y|
+      @fenster.setpos(y + 1, 0)
+      @fenster.addstr("|")
+      @fenster.setpos(y + 1, @fensterBreite - 1)
+      @fenster.addstr("|")
+    end
+    @fenster.setpos(@fensterHoehe - 1, 0)
+    @fenster.addstr("\\" + "-" * (@fensterBreite - 2) + "/")
+  end
+  
+  def oeffnen()
+    @wahl = 0
+    @fenster = Window.new(@fensterHoehe, @fensterBreite, @verschiebungy + @hoehe / 2 - @fensterHoehe / 2, @verschiebungx + @breite / 2 - @fensterBreite / 2)
+    @fenster.keypad = true
+    erneuern()
+  end
+
+  def schliessen()
+    @fenster.close()
+    @elternFenster.erneuern()
+  end
+
+  def auswaehlen()
+    @fenster.getch
+  end
+
+end

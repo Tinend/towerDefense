@@ -1,0 +1,22 @@
+class Sonderfaehigkeit
+  def initialize(bedingung, beschreibung)
+    @bedingung = bedingung
+    @beschreibung = beschreibung
+  end
+
+  attr_reader :bedingung
+
+  def beschreibung(laenge)
+    woerter = @beschreibung.split(" ")
+    woerter.reduce([""]) do |anfang, wort|
+      if anfang[-1].length + wort.length < laenge
+        anfang[-1] += " " + wort
+      else
+        zeilenLaenge = wort.length + 1
+        anfang.push(" " + wort)
+      end
+      anfang
+    end
+  end
+end
+  
