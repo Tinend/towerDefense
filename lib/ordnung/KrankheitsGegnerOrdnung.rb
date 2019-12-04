@@ -1,6 +1,6 @@
 require 'GegnerOrdnung'
 
-class KrankheitssGegnerOrdnung < GegnerOrdnung
+class KrankheitsGegnerOrdnung < GegnerOrdnung
   def <=>(ordnung)
     if @gegner.krank != ordnung.gegner.krank
       return @gegner.krank <=> ordnung.gegner.krank
