@@ -134,7 +134,7 @@ class FeldFenster
     return false unless @spielfeld.hatBaum?(@position[0], @position[1])
     baum = @spielfeld.gibBaum(@position[0], @position[1])
     return false if baum.level == 4
-    #return false if @baumLevel[baum.level + 1] + 2 > @baumLevel[baum.level]
+    return false if @baumLevel[baum.level + 1] + 2 > @baumLevel[baum.level]
     true
   end
   

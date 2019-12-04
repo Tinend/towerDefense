@@ -1,3 +1,4 @@
+raise
 require 'colorize'
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'FeldErsteller'
