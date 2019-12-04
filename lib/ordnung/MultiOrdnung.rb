@@ -2,7 +2,7 @@ require 'GegnerOrdnung'
 
 class MultiOrdnung
   def initialize(gegner)
-    @gegner = [gegner]
+    @gegner = gegner
   end
 
   attr_reader :gegner
@@ -12,10 +12,10 @@ class MultiOrdnung
   end
 
   def +(multiOrdnung)
-    @gegner += multiOrdnung.gegner
+    MultiOrdnung.new(@gegner + multiOrdnung.gegner)
   end
 
-  def zusammenfuegbar(multiOrdnung)
+  def zusammenfuegbar?(multiOrdnung)
     @gegner[0].position == multiOrdnung.gegner[0].position
   end
 end

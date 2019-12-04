@@ -15,9 +15,9 @@ class GegnerSortierer
   end
 
   def multiZielFinden(position, reichweite, gegnerArray)
-    ordnungsArray = gegnerArray.gegner.map {|gegner| @ordnung.new(gegner)}
-    moeglicheZiele = ordnungsArray.reduce([]) do|array, ordnung|
-      if array.length > 0 and array[-1].zusammenfuegbar(ordnung)
+    ordnungsArray = gegnerArray.gegner.map {|gegner| @ordnung.new([gegner])}
+    moeglicheZiele = ordnungsArray.reduce([]) do |array, ordnung|
+      if array.length > 0 and array[-1].zusammenfuegbar?(ordnung)
         array[-1] = array[-1] + ordnung
       else
         array.push(ordnung)
