@@ -90,7 +90,7 @@ class Baum
     r += ReichweiteBoostLevel3 if @upgrades.upgrade?(Reichweite3Sonderfaehigkeit.bedingung())
     r += ReichweiteBoostLevel4 if @upgrades.upgrade?(Reichweite4Sonderfaehigkeit.bedingung())
     r += AllroundReichweiteBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
-    r += KoenigsReichweiteBoost if @reichweiteBoost 
+    r += KoenigsReichweiteBoost if @reichweiteBoost or reichweiteKoenig?()
    return r
   end
   
