@@ -3,10 +3,10 @@ require 'InaktiveLeiste'
 require 'GegnerErsteller'
 
 class Leiste
-  def initialize(hoehe, breite, gegnerErsteller)
-    @inaktiveLeiste = InaktiveLeiste.new(hoehe, breite)
+  def initialize(hoehe, breite, gegnerErsteller, spieler)
+    @inaktiveLeiste = InaktiveLeiste.new(hoehe, breite, spieler)
     @gegnerErsteller = gegnerErsteller
-    @aktiveLeiste = AktiveLeiste.new(hoehe, breite, gegnerErsteller)
+    @aktiveLeiste = AktiveLeiste.new(hoehe, breite, gegnerErsteller, spieler)
   end
 
   def aktivAnzeigen(baum)

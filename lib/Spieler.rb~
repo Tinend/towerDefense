@@ -1,0 +1,16 @@
+class Spieler
+  MaxLeben = 20
+  def initialize()
+    @leben = MaxLeben
+  end
+
+  attr_reader :leben
+
+  def verloren?()
+    @leben <= 0
+  end
+
+  def verletztWerden()
+    @leben -= 1
+  end
+end

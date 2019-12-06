@@ -3,9 +3,9 @@ require 'WegStueck'
 class Feind
   MaxLaufErsparnis = 10
   MaxVerlangsamungsCounter = 30
-  MaxVergiftungsCounter = 30
+  MaxVergiftungsCounter = 100
   MaxVereisungsCounter = 100
-  VerbrennWkeit = 0.2
+  VerbrennWkeit = 0.6
   MaxKrank = 100
  
   def initialize(maxLeben, wegStueck, typ, geschwindigkeit)
@@ -23,6 +23,7 @@ class Feind
     @vereisungsCounter = 0
     @start = wegStueck
     @krank = 0
+    @heilt = false
   end
 
   attr_accessor :leben
@@ -34,7 +35,7 @@ class Feind
   
   def position()
     if @wegStueck == nil
-      return [0, 0]
+      return [-100, -100]
     else
       return @wegStueck.position
     end
@@ -70,9 +71,10 @@ class Feind
   end
   
   def teleportieren()
+    return if @geschwindigkeit == 0
     @laufErsparnis = 0
     @laufDistanz = 0
-    @wegStueck.feinde.delete(self)
+    @wegStueck.feinde.delete(self) if @wegStueck != nil
     @wegStueck = @start
     @wegStueck.feinde.push(self)
   end
@@ -126,8 +128,18 @@ class Feind
   end
 
   def sterben()
-    if tot?
+    if tot? and @wegStueck != nil
       @wegStueck.feinde.delete(self)
+    end
+  end
+
+  def heilen?()
+    @heilen
+  end
+
+  def heile(staerke)
+    if @leben > 0 and staerke >= @leben
+      @heilen = true
     end
   end
 end

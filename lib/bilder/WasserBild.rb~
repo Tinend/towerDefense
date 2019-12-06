@@ -1,0 +1,8 @@
+require 'farben'
+
+WasserBild = [
+  [Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz]
+  [Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz]
+  [Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ]
+  [Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Blau   ,Blau   ,Blau   ,Blau   ,Blau   ,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz]
+]

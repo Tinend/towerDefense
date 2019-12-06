@@ -11,7 +11,7 @@ class GegnerSortierer
     }
     return nil if ordnungsArray.length == 0
     ordnungsArray.sort!
-    ordnungsArray[0].gegner
+    ordnungsArray[-1].gegner
   end
 
   def multiZielFinden(position, reichweite, gegnerArray)
@@ -25,7 +25,7 @@ class GegnerSortierer
       array
     end
     return [] if moeglicheZiele == []
-    ziele = moeglicheZiele[0]
+    ziele = moeglicheZiele[-1]
     moeglicheZiele.each do |mZ|
       ziele = mZ if mZ.gegner.length > ziele.gegner.length
     end

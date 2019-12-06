@@ -2,27 +2,49 @@ require 'ordnung/StandardGegnerOrdnung'
 require 'farben'
 
 class InaktiveLeiste
-  def initialize(hoehe, breite)
+  def initialize(hoehe, breite, spieler)
     @hoehe = hoehe
     @breite = breite
+    @spieler = spieler
   end
 
   def oeffnen()
     @window = Window.new(@hoehe, @breite, 0, 0)
   end
 
-  def anzeigen()
+  def lebenAnzeigen(verschiebung)
+    herz = @spieler.herz()
+    herz.each_with_index do |zeile, y|
+      zeile.length.times do |x|
+        @window.setpos(y, x + verschiebung)
+        if zeile[x] == "#"
+          @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+            @window.addstr(" ")
+          }
+        elsif zeile[x] != " "
+          @window.attron(color_pair(berechneFarbe(Gelb, Rot))|A_NORMAL) {
+            @window.addstr(zeile[x])
+          }
+        end
+      end
+    end
+  end
+
+  def gegnerLebenAnzeigen(verschiebung)
     return if @gegnerArray == nil
+    4.times do |y|
+      @window.setpos(y, verschiebung)
+      @window.addstr(" " * 120)
+    end
     gegnerOrdnungen = @gegnerArray.gegner.map {|gegner| StandardGegnerOrdnung.new(gegner)}
     gegnerOrdnungen.sort!.reverse!
-    @window.clear()
-    gegnerOrdnungen[0..15].each_with_index do |gegnerOrdnung, index|
+    gegnerOrdnungen[0..23].each_with_index do |gegnerOrdnung, index|
       gegner = gegnerOrdnung.gegner
       x = index
       x /= 4
       x *= 20
       y = index % 4      
-      @window.setpos(y, x)
+      @window.setpos(y, x + verschiebung)
       @window.addstr("[")
       next if gegner.leben <= 0
       lpFarbe = berechneLpFarbe(gegner)
@@ -65,6 +87,11 @@ class InaktiveLeiste
       @window.addstr(" " * (10 - zeichen))
       @window.refresh()
     end
+  end
+  
+  def anzeigen()
+    lebenAnzeigen(2)
+    gegnerLebenAnzeigen(11)
   end
   
   def berechneLpFarbe(gegner)

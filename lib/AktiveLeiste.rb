@@ -15,11 +15,12 @@ class AktiveLeiste
   SchadenFaktorRot = 0.5
 
   
-  def initialize(hoehe, breite, gegnerErsteller)
+  def initialize(hoehe, breite, gegnerErsteller, spieler)
     @hoehe = hoehe
     @breite = breite
     @gegnerErsteller = gegnerErsteller
     @bauPhase = true
+    @spieler = spieler
   end
 
   attr_accessor :bauPhase
@@ -65,7 +66,7 @@ class AktiveLeiste
       @window.addstr(":")
       @window.addstr(" " * (4 - schussrate.length) + schussrate)
       if baum.geschwindigkeitsBoost
-        @window.setpos(1, verschiebung + 18)
+        @window.setpos(1, verschiebung + 19)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
@@ -75,43 +76,43 @@ class AktiveLeiste
       reichweite = baum.reichweite().to_s
       @window.addstr(" " * (4 - reichweite.length) + reichweite)
       if baum.reichweiteBoost
-        @window.setpos(2, verschiebung + 18)
+        @window.setpos(2, verschiebung + 19)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       end
       @window.setpos(1, verschiebung + 21)
       feuer = baum.berechneSchaden(:feuer).to_s
-      @window.addstr(" " * (4 - feuer.length))
+      @window.addstr(" " * (3 - feuer.length))
       @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
         @window.addstr(feuer)
       }
       if baum.staerkeBoost
-        @window.setpos(1, verschiebung + 26)
+        @window.setpos(1, verschiebung + 24)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       end
       @window.setpos(0, verschiebung + 21)
       pflanze = baum.berechneSchaden(:pflanze).to_s
-      @window.addstr(" " * (4 - pflanze.length))
+      @window.addstr(" " * (3 - pflanze.length))
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr(pflanze)
       }
       if baum.staerkeBoost
-        @window.setpos(0, verschiebung + 26)
+        @window.setpos(0, verschiebung + 24)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       end
       @window.setpos(2, verschiebung + 21)
       wasser = baum.berechneSchaden(:wasser).to_s
-      @window.addstr(" " * (4 - wasser.length))
+      @window.addstr(" " * (3 - wasser.length))
       @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
         @window.addstr(wasser)
       }
       if baum.staerkeBoost
-        @window.setpos(2, verschiebung + 26)
+        @window.setpos(2, verschiebung + 24)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
@@ -188,7 +189,7 @@ class AktiveLeiste
     @window.setpos(3, 30 + verschiebung)
     @window.addstr(gesamtLp.to_s + "   ")
     @baumLevel.each_with_index do |bl, i|
-      @window.setpos(3, 4 * i + 80 + verschiebung)
+      @window.setpos(3, 4 * i + 70 + verschiebung)
       @window.addstr(bl.to_s)
     end
   end
@@ -201,20 +202,40 @@ class AktiveLeiste
     end
     3.times do |i|
       @window.setpos(i, verschiebung)
-      @window.addstr(" " * 25)
+      @window.addstr(" " * 21)
     end
-    @window.setpos(0, verschiebung + (18 - text.length) / 2)
+    @window.setpos(0, verschiebung + (14 - text.length) / 2)
     @window.addstr("+" + "-" * text.length + "+")
-    @window.setpos(1, verschiebung + (18 - text.length) / 2)
+    @window.setpos(1, verschiebung + (14 - text.length) / 2)
     @window.addstr("|" + text + "|")
-    @window.setpos(2, verschiebung + (18 - text.length) / 2)
+    @window.setpos(2, verschiebung + (14 - text.length) / 2)
     @window.addstr("+" + "-" * text.length + "+")
+  end
+
+  def lebenAnzeigen(verschiebung)
+    herz = @spieler.herz()
+    herz.each_with_index do |zeile, y|
+      zeile.length.times do |x|
+        @window.setpos(y, x + verschiebung)
+        if zeile[x] == "#"
+          @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+            @window.addstr(" ")
+          }
+        elsif zeile[x] != " "
+          @window.attron(color_pair(berechneFarbe(Gelb, Rot))|A_NORMAL) {
+            @window.addstr(zeile[x])
+          }
+        end
+      end
+    end
   end
   
   def anzeigen(baum)
-    phaseAnzeigen(3)
-    baumAnzeigen(baum, 25)
-    gegnerAnzeigen(52)
+    lebenAnzeigen(2)
+    phaseAnzeigen(10)
+    #phaseAnzeigen(3)
+    baumAnzeigen(baum, 27)
+    gegnerAnzeigen(54)
     @window.refresh()
   end
 

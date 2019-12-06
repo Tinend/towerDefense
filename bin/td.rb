@@ -19,6 +19,7 @@ require 'Leiste'
 require 'farben'
 require 'NutzenAnzeiger'
 require 'BaumUpgradeFensterBuilder'
+require 'Spieler'
 
 KEY_ENTER_REAL = 10
 KEY_SUP = 337
@@ -45,8 +46,9 @@ curs_set(0)
 hoehe = spielfeld.hoehe * HOEHENFAKTOR
 breite = spielfeld.breite * BREITENFAKTOR
 baumErsteller = BaumErsteller.new()
-gegnerErsteller = GegnerErsteller.new(spielfeld.start)
-leiste = Leiste.new(Freiraum, breite, gegnerErsteller)
+spieler = Spieler.new()
+gegnerErsteller = GegnerErsteller.new(spielfeld.start, spieler)
+leiste = Leiste.new(Freiraum, breite, gegnerErsteller, spieler)
 feldFenster = FeldFenster.new(Freiraum, 0, spielfeld, baumErsteller, {nutzenAnzeiger: nutzenAnzeiger, baumUpgradeFensterBuilder: baumUpgradeFensterBuilder}, leiste)
 begin
   cbreak
@@ -54,16 +56,16 @@ begin
   crmode
   runde = 0
   setpos(0, 0)
-  startMenue = StartMenue.new(["Einfach", "Mittel", "Schwierig"], hoehe, breite, Freiraum, 0, feldFenster, gegnerErsteller, baumErsteller)
+  startMenue = StartMenue.new(["Einfach", "Mittel", "Schwierig", "Ultra"], hoehe, breite, Freiraum, 0, feldFenster, gegnerErsteller, baumErsteller, spieler)
   startMenue.auswaehlen()
   nutzenAnzeiger.erstelle(hoehe, breite, Freiraum, 0, feldFenster)
   baumUpgradeFensterBuilder.erstelle(hoehe, breite, Freiraum, 0, feldFenster)
   spielfeld.gegnerZahl = gegnerErsteller.anzahl
-  gegnerArray = GegnerArray.new(nil, 0, 0, :pflanze, 1)
+  gegnerArray = GegnerArray.new(nil, 0, 0, :pflanze, 1, spieler)
   feldFenster.anfangsPhase
   #10.times {feldFenster.anfangsPhase}
   #50.times {feldFenster.aktivePhase()}
-  until gegnerArray.verloren?()
+  until spieler.verloren?()
     runde += 1
     gegnerErsteller.definiereGegner()
     feldFenster.aktivePhase()
@@ -75,11 +77,12 @@ begin
     begin
       leiste.inaktivOeffnen()
       feldFenster.anzeigen()
-      until gegnerArray.verloren?() or gegnerArray.gewonnen?()
+      until spieler.verloren?() or gegnerArray.gewonnen?()
         zeitpunkt += 1
         gegnerArray.bewegen()
         spielfeld.schiessen(gegnerArray)
         gegnerArray.sterben()
+        gegnerArray.verletzen()
         feldFenster.kurzAnzeigen() if zeitpunkt % 1 == 0
         sleep(0.003)
       end

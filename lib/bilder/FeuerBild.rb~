@@ -1,0 +1,8 @@
+require 'farben'
+
+FeuerBild = [
+  [Schwarz,Schwarz,Rot    ,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz,Rot    ,Schwarz,Schwarz,Schwarz,Rot    ,Rot    ,Schwarz,Schwarz,Schwarz,Rot    ,Schwarz,Schwarz,Schwarz,Rot    ]
+  [Rot    ,Schwarz,Schwarz,Schwarz,Rot    ,Rot    ,Schwarz,Rot    ,Rot    ,Rot    ,Gelb   ,Rot    ,Rot    ,Rot    ,Gelb   ,Rot    ,Rot    ,Rot    ,Rot    ,Schwarz,Schwarz,Schwarz,Schwarz,Schwarz]
+  [Schwarz,Schwarz,Rot    ,Schwarz,Schwarz,Schwarz,Rot    ,Rot    ,Rot    ,Gelb   ,Gelb   ,Gelb   ,Gelb   ,Rot    ,Gelb   ,Rot    ,Rot    ,Schwarz,Schwarz,Schwarz,Schwarz,Rot    ,Schwarz,Schwarz]
+  [Schwarz,Schwarz,Schwarz,Rot    ,Rot    ,Schwarz,Schwarz,Schwarz,Rot    ,Rot    ,Rot    ,Rot    ,Rot    ,Rot    ,Rot    ,Schwarz,Schwarz,Schwarz,Schwarz,Rot    ,Schwarz,Schwarz,Schwarz,Schwarz]
+]

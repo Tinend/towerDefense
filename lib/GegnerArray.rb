@@ -4,7 +4,7 @@ require 'Gegner'
 
 class GegnerArray
   GegnerAbstand = 10
-  def initialize(start, gegnerZahl, maxLp, typ, geschwindigkeit)
+  def initialize(start, gegnerZahl, maxLp, typ, geschwindigkeit, spieler)
     @typ = typ
     @maxLp = maxLp
     @rein = 0
@@ -13,6 +13,7 @@ class GegnerArray
     @start = start
     @gegner = []
     @runde = 0
+    @spieler = spieler
   end
 
   attr_reader :gegner
@@ -37,10 +38,22 @@ class GegnerArray
   def sterben()
     @gegner.each do |gegner|
       gegner.sterben()
+      if gegner.tot?() and gegner.heilen?()
+        @spieler.heilen()
+      end
     end
     @gegner.delete_if {|gegner| gegner.tot?()}
   end
 
+  def verletzen()
+    @gegner.each do |gegner|
+      if gegner.amZiel?()
+        @spieler.verleztWerden()
+        gegner.teleportieren()
+      end
+    end
+  end
+  
   def verloren?()
     @gegner.any? {|gegner| gegner.amZiel?()}
   end

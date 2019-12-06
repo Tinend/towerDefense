@@ -18,7 +18,7 @@ class Upgrades
     vergleichsarray == @upgrades[0..(vergleichsarray.length - 1)].sort
   end
 
-  def effektivitaetsfaktor()
+  def effektivitaetsLevel()
     return 1 if @upgrades.length < 2 or @upgrades[0] != @upgrades[1]
     return 2 if @upgrades.length < 3 or @upgrades[1] != @upgrades[2]
     3

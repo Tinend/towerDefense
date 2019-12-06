@@ -12,30 +12,29 @@ require 'Sonderfaehigkeiten'
 class Baum
   MaxLaden = 10
   LadenBoostLevel1 = 2
-  LadenBoostLevel2 = 5
+  LadenBoostLevel2 = 6
   SchnellLadenStaerkeMalusLevel2 = 0.5
-  AllroundLadeBoost = 1
-  AllroundStaerkeBoost = 1.2
+  AllroundLadeBoost = 2
+  AllroundStaerkeBoost = 1.3
   AllroundReichweiteBoost = 1
   GrundSchaden = 10
-  EffektivBonus = 5
-  IneffektivMalus = 2
-  StaerkeBoostLevel1 = 1.4
+  EffektivBoni = [5, 22, 58, 35]
+  IneffektivMali = [2, 4, 6, 8]
+  StaerkeBoostLevel1 = 4.0 / 3
   StaerkeBoostLevel2 = 2
   ReichweiteBoostLevel1 = 1
   ReichweiteBoostLevel2 = 2
   ReichweiteBoostLevel3 = 3
   ReichweiteBoostLevel4 = 4
-  EffektivBoost = 4
   DoppelWkeit = 0.5
   VereisungsWkeit = 0.01
-  InstaDeathWkeit = 0.01
-  TeleportationsWkeit = 0.01
-  VersteinerungsWkeit = 0.01
-  ProzentLP = 10.0
+  InstaDeathWkeit = 0.025
+  TeleportationsWkeit = 0.03
+  VersteinerungsWkeit = 0.0325
+  ProzentLP = 1.5
   KoenigsReichweiteBoost = 1
   KoenigsGeschwindigkeitsBoost = 1
-  KoenigsStaerkeBoost = 1.1
+  KoenigsStaerkeBoost = 1.25
   
   def initialize(reichweite, position)
     @reichweite = reichweite
@@ -165,6 +164,7 @@ class Baum
   def schiessen(ziel)
     schaden = berechneSchaden(ziel.typ, ziel.leben)
     schaden *= 2 if rand(0) <= DoppelWkeit and @upgrades.upgrade?(DoppelterSchadenSonderfaehigkeit.bedingung)
+    ziel.heile(schaden) if @upgrades.upgrade?(HeilungsSonderfaehigkeit.bedingung)
     ziel.leben -= schaden
     ziel.verlangsamen() if @upgrades.upgrade?(VerlangsamungsSonderfaehigkeit.bedingung)
     ziel.vergiften(schaden) if @upgrades.upgrade?(VergiftungsSonderfaehigkeit.bedingung)
@@ -178,13 +178,14 @@ class Baum
   
   def berechneSchaden(typ, lp = 0)
     schaden = GrundSchaden
-    schaden = [lp * ProzentLP / 100, schaden].max() if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
+    schaden += lp * ProzentLP / 100 if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
     schaden *= KoenigsStaerkeBoost if @staerkeBoost
-    effektivitaetsFaktor = @upgrades.effektivitaetsfaktor()
-    effektivitaetsFaktor = EffektivBoost if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)
+    effektivitaetsLevel = @upgrades.effektivitaetsLevel()
+    effektivitaetsLevel = 4 if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)
+    
     if @upgrades.upgrades.length >= 1
-      schaden += EffektivBonus * effektivitaetsFaktor if effektiv?(@upgrades.typ, typ)
-      schaden -= IneffektivMalus * effektivitaetsFaktor if ineffektiv?(@upgrades.typ, typ)
+      schaden += EffektivBoni[effektivitaetsLevel - 1] if effektiv?(@upgrades.typ, typ)
+      schaden -= IneffektivMali[effektivitaetsLevel - 1] if ineffektiv?(@upgrades.typ, typ)
     end
     schaden *= StaerkeBoostLevel1 if @upgrades.upgrade?(StaerkeSonderfaehigkeit.bedingung)
     schaden *= StaerkeBoostLevel2 if @upgrades.upgrade?(Staerke2Sonderfaehigkeit.bedingung)
