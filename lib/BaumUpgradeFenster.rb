@@ -1,7 +1,7 @@
 require 'BaumUpgradeFenster'
 
 class BaumUpgradeFenster
-  Wahlen = [:nichts, :pflanze, :wasser, :feuer]
+  Wahlen = [:nichts, :feuer, :pflanze, :wasser]
   
   def initialize(hoehe, breite, verschiebungy, verschiebungx, elternFenster)
     @hoehe = hoehe

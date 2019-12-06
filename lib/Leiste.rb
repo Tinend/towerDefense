@@ -9,15 +9,39 @@ class Leiste
     @aktiveLeiste = AktiveLeiste.new(hoehe, breite, gegnerErsteller)
   end
 
-  def aktivAnzeigen(baum, treffer)
-    @aktiveLeiste.anzeigen(baum, treffer)
+  def aktivAnzeigen(baum)
+    @aktiveLeiste.anzeigen(baum)
   end
 
+  def inaktivieren(gegnerArray)
+    @inaktiveLeiste.anschalten(gegnerArray)
+  end
+
+  def inaktivAnzeigen()
+    @inaktiveLeiste.anzeigen()
+  end
+
+  def inaktivOeffnen()
+    @inaktiveLeiste.oeffnen()
+  end
+
+  def inaktivSchliessen()
+    @inaktiveLeiste.schliessen()
+  end
+  
   def aktivieren(baumLevel)
     @aktiveLeiste.oeffnen(baumLevel)
   end
 
   def deaktivieren()
     @aktiveLeiste.schliessen()
+  end
+
+  def bauPhaseAnfangen()
+    @aktiveLeiste.bauPhase = true
+  end
+
+  def bauPhaseBeenden()
+    @aktiveLeiste.bauPhase = false
   end
 end

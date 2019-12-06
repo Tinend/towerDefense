@@ -1,9 +1,8 @@
 include Curses
 require 'colorize'
+require 'farben'
 
 class Menue
-  MenueFarbeWeiss = 100
-  MenueFarbeSchwarz = 101
   def initialize(auswahlMoeglichkeiten, hoehe, breite, verschiebungy, verschiebungx, elternFenster)
     @auswahlMoeglichkeiten = auswahlMoeglichkeiten.dup
     @hoehe = hoehe
@@ -17,8 +16,6 @@ class Menue
     end
     @menueHoehe = @auswahlMoeglichkeiten.length + 2
     @wahl = 0
-    Curses.init_pair(MenueFarbeSchwarz, COLOR_BLACK, COLOR_WHITE)
-    Curses.init_pair(MenueFarbeWeiss, COLOR_WHITE, COLOR_BLACK)
   end
 
   def erneuern()
@@ -32,9 +29,9 @@ class Menue
     @auswahlMoeglichkeiten.each_with_index do |wahl, index|
       @menue.addstr("|")
       if index == @wahl
-        farbe = MenueFarbeSchwarz
+        farbe = berechneFarbe(Schwarz, Weiss)
       else
-        farbe = MenueFarbeWeiss
+        farbe = berechneFarbe(Weiss, Schwarz)
       end
       string = " " * ((@menueBreite - wahl.length - 2) / 2)
       string += wahl

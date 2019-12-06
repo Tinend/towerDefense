@@ -31,34 +31,6 @@ class Spielfeld
     end
   end
   
-  def berechneTrefferArray(position, reichweite)
-    treffer = []
-    (2 * reichweite.to_i + 1).times do |xVerschiebung|
-      x = position[0] + xVerschiebung - reichweite.to_i
-      (2 * reichweite.to_i + 1).times do |yVerschiebung|
-        y = position[1] + yVerschiebung - reichweite.to_i
-        if (xVerschiebung - reichweite.to_i) ** 2 + (yVerschiebung - reichweite.to_i) ** 2 <= reichweite ** 2 and x >= 0 and y >= 0 and @spielfeld.length > y and @spielfeld[y].length > x and @spielfeld[y][x].istWeg?()
-          treffer += @spielfeld[y][x].nummern()
-        end
-      end
-    end
-    treffer
-  end
-  
-  def berechneTreffer(position, reichweite)
-    treffer = berechneTrefferArray(position, reichweite)
-    return [0,0] if treffer.length == 0
-    minTreffer = treffer.length
-    maxTreffer = 0
-    treffer.sort!
-    letzter = treffer[0] - @gegnerZahl
-    treffer.each do |t|
-      maxTreffer += [t - letzter, @gegnerZahl].min
-      letzter = t
-    end
-    [minTreffer, maxTreffer]
-  end
- 
   def istWeg?(x,y)
     @spielfeld[y][x].istWeg?()
   end
@@ -127,36 +99,6 @@ class Spielfeld
     feind = Feind.new(maxleben, @start)
     @start.feinde.push(feind)
     feind
-  end
-
-  def anzeigen()
-    raise
-    ausgabe = ""
-    @spielfeld.each do |zeile|
-      zeile.each do |feld|
-        if feld.farbe == :rot
-          ausgabe += feld.anzeigen().red
-        elsif feld.farbe == :gruen
-          ausgabe += feld.anzeigen().green
-        else
-          ausgabe += feld.anzeigen()
-        end
-      end
-      ausgabe += "\n"
-    end
-    ausgabe
-  end
-
-  def schadenReduziert(koordinaten)
-    if @spielfeld[koordinaten[1]][koordinaten[0]].istWeg?()
-      return [@minSchaden, @maxSchaden]
-    else
-      baum = @spielfeld[koordinaten[1]][koordinaten[0]].baum
-      min, max = berechneTreffer(koordinaten, baum.reichweite)
-      min = @minSchaden - max * baum.schaden
-      max = @maxSchaden - max * baum.schaden
-      return [min, max]
-    end
   end
   
   def pflanzeBaum(koordinaten, baum)

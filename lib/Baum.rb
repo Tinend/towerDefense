@@ -47,6 +47,8 @@ class Baum
     @staerkeBoost = false
   end
 
+  attr_reader :staerkeBoost, :geschwindigkeitsBoost, :reichweiteBoost
+  
   def staerkeBoosten()
     @staerkeBoost = true
   end
@@ -95,7 +97,7 @@ class Baum
   end
   
   def laden()
-    @geladen += 1
+    @geladen = [maxLaden() + 1, @geladen + 1].min
   end
 
   def maxLaden()

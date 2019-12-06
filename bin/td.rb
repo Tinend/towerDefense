@@ -71,13 +71,20 @@ begin
     spielfeld.alleBoosten()
     gegnerArray = gegnerErsteller.erstelleGegner()
     zeitpunkt = 0
-    until gegnerArray.verloren?() or gegnerArray.gewonnen?()
-      zeitpunkt += 1
-      gegnerArray.bewegen()
-      spielfeld.schiessen(gegnerArray)
-      gegnerArray.sterben()
-      feldFenster.kurzAnzeigen() if zeitpunkt % 1 == 0
-      sleep(0.003)
+    leiste.inaktivieren(gegnerArray)
+    begin
+      leiste.inaktivOeffnen()
+      feldFenster.anzeigen()
+      until gegnerArray.verloren?() or gegnerArray.gewonnen?()
+        zeitpunkt += 1
+        gegnerArray.bewegen()
+        spielfeld.schiessen(gegnerArray)
+        gegnerArray.sterben()
+        feldFenster.kurzAnzeigen() if zeitpunkt % 1 == 0
+        sleep(0.3)
+      end
+    ensure
+      leiste.inaktivSchliessen()
     end
   end
 ensure

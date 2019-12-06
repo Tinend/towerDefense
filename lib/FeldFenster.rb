@@ -24,6 +24,7 @@ class FeldFenster
   end
 
   def kurzAnzeigen()
+    @leiste.inaktivAnzeigen()
     @hoehe.times do |y|
       @breite.times do |x|
         male(x,y) if @spielfeld.istWeg?(x, y)
@@ -34,7 +35,12 @@ class FeldFenster
   
   def anzeigen()
     if @spielerAktiv
-      @leiste.aktivAnzeigen(@baumErsteller, berechneTreffer())
+      if @spielfeld.hatBaum?(@position[0], @position[1])
+        baum = @spielfeld.gibBaum(@position[0], @position[1])
+      else
+        baum = nil
+      end
+      @leiste.aktivAnzeigen(baum)
     end
     @hoehe.times do |y|
       @breite.times do |x|
@@ -144,12 +150,14 @@ class FeldFenster
 
   def baumBauPhase()
     @baumErsteller.aktiv = true
+    @leiste.bauPhaseAnfangen()
     anzeigen()
     loop do
       eingabe = eingeben()
       if eingabe == :bauen and positionBaubar?()
         @spielfeld.pflanzeBaum(@position, @baumErsteller.erstelleBaum(@position.dup))
         @baumLevel[0] += 1
+        @leiste.bauPhaseBeenden()
         return 0
       end
       anzeigen()
@@ -217,20 +225,26 @@ class FeldFenster
   end
 
   def anfangsPhase()
-    @spielerAktiv = true
-    @leiste.aktivieren(@baumLevel)
-    erneuern()
-    baumBauPhase()
-    baumBauPhase()
-    @leiste.deaktivieren()
+    begin
+      @spielerAktiv = true
+      @leiste.aktivieren(@baumLevel)
+      erneuern()
+      baumBauPhase()
+      baumBauPhase()
+    ensure
+      @leiste.deaktivieren()
+    end
   end
   
   def aktivePhase()
-    @spielerAktiv = true
-    @leiste.aktivieren(@baumLevel)
-    erneuern()
-    baumBauPhase()
-    baumErweiterPhase()
-    @leiste.deaktivieren()
+    begin
+      @spielerAktiv = true
+      @leiste.aktivieren(@baumLevel)
+      erneuern()
+      baumBauPhase()
+      baumErweiterPhase()
+    ensure
+      @leiste.deaktivieren()
+    end
   end
 end

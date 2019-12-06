@@ -3,29 +3,29 @@ require 'Sonderfaehigkeit'
 require 'farben'
 
 FeuerSonderfaehigkeit = Sonderfaehigkeit.new([:feuer], "+5 Schaden gegen Pflanzengeister; -2 Schaden gegen Wassergeister", Rot, Cyan, ["     ", "  M  ", "     "], false)
-WasserSonderfaehigkeit = Sonderfaehigkeit.new([:wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Blau, Cyan, ["     ", "  U  ", "     "], false)
 PflanzeSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Gruen, Cyan, ["     ", "  Y  ", "     "], false)
-Level1Sonderfaehigkeiten = [FeuerSonderfaehigkeit, WasserSonderfaehigkeit, PflanzeSonderfaehigkeit]
+WasserSonderfaehigkeit = Sonderfaehigkeit.new([:wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Blau, Cyan, ["     ", "  U  ", "     "], false)
+Level1Sonderfaehigkeiten = [FeuerSonderfaehigkeit, PflanzeSonderfaehigkeit, WasserSonderfaehigkeit]
 
 Feuer2Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer], "+5 Schaden gegen Pflanzengeister; -2 Schaden gegen Wassergeister an", Rot, Cyan, ["     ", " A A ", "     "], false)
-Wasser2Sonderfaehigkeit = Sonderfaehigkeit.new([:wasser, :wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Blau, Cyan, ["     ", " ~ ~ ", "     "], false)
-Pflanze2Sonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Gruen, Cyan, ["     ", " ( ) ", "     "], false)
-ReichweiteSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :wasser], "+1 Reichweite", Magenta, Cyan, ["     ", " > < ", "     "], false)
 SchnellLadenSondefaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze], "-2 Schussrate", Gelb, Cyan, ["     ", " Z Z ", "     "], false)
+ReichweiteSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :wasser], "+1 Reichweite", Magenta, Cyan, ["     ", " > < ", "     "], false)
+Pflanze2Sonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Gruen, Cyan, ["     ", " ( ) ", "     "], false)
 StaerkeSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :wasser], "+40% Schaden", Schwarz, Cyan, ["     ", " X X ", "     "], false)
-Level2Sonderfaehigkeiten = [Feuer2Sonderfaehigkeit, Wasser2Sonderfaehigkeit, Pflanze2Sonderfaehigkeit, ReichweiteSonderfaehigkeit, SchnellLadenSondefaehigkeit, StaerkeSonderfaehigkeit]
+Wasser2Sonderfaehigkeit = Sonderfaehigkeit.new([:wasser, :wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Blau, Cyan, ["     ", " ~ ~ ", "     "], false)
+Level2Sonderfaehigkeiten = [Feuer2Sonderfaehigkeit, SchnellLadenSondefaehigkeit, ReichweiteSonderfaehigkeit, Pflanze2Sonderfaehigkeit, StaerkeSonderfaehigkeit, Wasser2Sonderfaehigkeit]
 
 Feuer3Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer], "+5 Schaden gegen Pflanzengeister; -2 Schaden gegen Wassergeister an", Gelb, Cyan, ["  A  ", "     ", "  A  "], false)
-Wasser3Sonderfaehigkeit = Sonderfaehigkeit.new([:wasser, :wasser, :wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Weiss, Blau, ["  ~  ", "     ", "  ~  "], true)
-Pflanze3Sonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze, :pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Rot, Gruen, ["  O  ", "     ", "  A  "], true)
-SchwaechenStaerkerSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :wasser], "Vervierfacht Schwächen und Stärken der Geister", Schwarz, Cyan, ["  T  ", "     ", "  U  "], false)
-SplashSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :wasser, :wasser], "Trifft alle Gegner auf einem Feld. Zielt auf Felder mit möglichst vielen Gegnern", Magenta, Gruen, ["  @  ", "     ", "  @  "], false)
-VergiftungsSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :pflanze], "Vergiftet Gegner zeitweise und verdoppelt dadurch den Schaden insgesamt. Versucht Unvergiftete zu treffen.", Gruen, Blau, ["  :  ", "     ", "  :  "], true)
-VerlangsamungsSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze, :wasser], "Halbiert Geschwindigkeit von Gegnern zeitweise. Versucht unverlangsamte Ziele zu treffen.", Weiss, Cyan, ["  #  ", "     ", "  #  "], false)
-VereisungsSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :wasser, :wasser], "Lässt Gegner mit einer W'keit von 1% hundert Züge lang einfrieren. Versucht uneingefrorene Ziele zu treffen", Weiss, Cyan, ["  *  ", "  M  ", "  *  "], true)
 DoppelterSchadenSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :pflanze], "Verursacht 50% sicher doppelten Schaden", Rot, Cyan, ["  X  ", "     ", "  X  "], false)
 Reichweite2Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :wasser], "+2 Reichweite", Gelb, Gruen, ["  V  ", "     ", "  A  "], false)
-Level3Sonderfaehigkeiten = [Feuer3Sonderfaehigkeit, Wasser3Sonderfaehigkeit, Pflanze3Sonderfaehigkeit, SchwaechenStaerkerSonderfaehigkeit, SplashSonderfaehigkeit, VergiftungsSonderfaehigkeit, VerlangsamungsSonderfaehigkeit, VereisungsSonderfaehigkeit, DoppelterSchadenSonderfaehigkeit, Reichweite2Sonderfaehigkeit]
+VergiftungsSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :pflanze], "Vergiftet Gegner zeitweise und verdoppelt dadurch den Schaden insgesamt. Versucht Unvergiftete zu treffen.", Gruen, Blau, ["  :  ", "     ", "  :  "], true)
+SchwaechenStaerkerSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :wasser], "Vervierfacht Schwächen und Stärken der Geister", Schwarz, Cyan, ["  T  ", "     ", "  U  "], false)
+SplashSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :wasser, :wasser], "Trifft alle Gegner auf einem Feld. Zielt auf Felder mit möglichst vielen Gegnern", Magenta, Gruen, ["  @  ", "     ", "  @  "], false)
+Pflanze3Sonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze, :pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Rot, Gruen, ["  O  ", "     ", "  A  "], true)
+VerlangsamungsSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze, :wasser], "Halbiert Geschwindigkeit von Gegnern zeitweise. Versucht unverlangsamte Ziele zu treffen.", Weiss, Cyan, ["  #  ", "     ", "  #  "], false)
+VereisungsSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :wasser, :wasser], "Lässt Gegner mit einer W'keit von 1% hundert Züge lang einfrieren. Versucht uneingefrorene Ziele zu treffen", Weiss, Cyan, ["  *  ", "  M  ", "  *  "], true)
+Wasser3Sonderfaehigkeit = Sonderfaehigkeit.new([:wasser, :wasser, :wasser], "+5 Schaden gegen Feuergeister; -2 Schaden gegen Pflanzengeister an", Weiss, Blau, ["  ~  ", "     ", "  ~  "], true)
+Level3Sonderfaehigkeiten = [Feuer3Sonderfaehigkeit, DoppelterSchadenSonderfaehigkeit, Reichweite2Sonderfaehigkeit, VergiftungsSonderfaehigkeit, SchwaechenStaerkerSonderfaehigkeit, SplashSonderfaehigkeit, Pflanze3Sonderfaehigkeit, VerlangsamungsSonderfaehigkeit, VereisungsSonderfaehigkeit, Wasser3Sonderfaehigkeit]
 
 InstaDeathSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :feuer], "1% Chance auf Insta-Death", Gelb, Rot, ["/\\ /\\", "     ", "/\\ /\\"], true)
 BrandSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :pflanze], "Erzündet dauerhaft ein Feuer auf dem Zielfeld, das jedem Gegner dort jede Runde 20% sicher ein Leben nimmt", Rot, Cyan, ["ÜÄ  V", "     ", ".ö oÖ"], false)

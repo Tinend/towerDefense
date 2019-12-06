@@ -11,6 +11,7 @@ class GegnerErsteller
     @staerkePolynom = [1, 1, -1]
     @typ = rand(3)
     @staerke = 1
+    @geschwindigkeit = 1
   end
 
   attr_accessor :staerkePolynom
@@ -29,6 +30,9 @@ class GegnerErsteller
     elsif typ() == :wasser
       wasserErstellen()
     end
+    @staerke = 30
+    @anzahl = 2
+    @geschwindigkeit = 1
   end
   
   def erstelleGegner()

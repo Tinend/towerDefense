@@ -8,9 +8,9 @@ class Feind
   VerbrennWkeit = 0.2
   MaxKrank = 100
  
-  def initialize(maxleben, wegStueck, typ, geschwindigkeit)
-    @leben = maxleben
-    @maxleben = maxleben
+  def initialize(maxLeben, wegStueck, typ, geschwindigkeit)
+    @leben = maxLeben
+    @maxLeben = maxLeben
     @wegStueck = wegStueck
     @typ = typ
     @handycaps = []
@@ -26,8 +26,12 @@ class Feind
   end
 
   attr_accessor :leben
-  attr_reader :typ, :laufDistanz, :verlangsamungsCounter, :vereisungsCounter, :vergiftungsCounter, :krank
+  attr_reader :typ, :laufDistanz, :verlangsamungsCounter, :vereisungsCounter, :vergiftungsCounter, :krank, :maxLeben
 
+  def versteinert?()
+    return @geschwindigkeit == 0
+  end
+  
   def position()
     if @wegStueck == nil
       return [0, 0]
@@ -68,7 +72,9 @@ class Feind
   def teleportieren()
     @laufErsparnis = 0
     @laufDistanz = 0
+    @wegStueck.feinde.delete(self)
     @wegStueck = @start
+    @wegStueck.feinde.push(self)
   end
   
   def laufen()
@@ -108,7 +114,7 @@ class Feind
   end
 
   def anzeigen()
-    @leben.to_s + "/" + @maxleben.to_s
+    @leben.to_s + "/" + @maxLeben.to_s
   end
 
   def tot?()

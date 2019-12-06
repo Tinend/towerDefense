@@ -22,11 +22,11 @@ class WegStueck
   
   def farbe()
     if @feinde == [] and not @brennen
-      return :weiss
+      return Weiss
     elsif @feinde == []
-      return :weiss
+      return Rot
     else
-      return :rot
+      return Rot
     end
   end
   
