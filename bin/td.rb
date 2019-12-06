@@ -81,7 +81,7 @@ begin
         spielfeld.schiessen(gegnerArray)
         gegnerArray.sterben()
         feldFenster.kurzAnzeigen() if zeitpunkt % 1 == 0
-        sleep(0.3)
+        sleep(0.003)
       end
     ensure
       leiste.inaktivSchliessen()

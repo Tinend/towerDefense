@@ -38,8 +38,6 @@ class InaktiveLeiste
         }
         zeichen += 1
       end
-      @window.addstr(gegner.laufDistanz.to_s)
-      zeichen += gegner.laufDistanz.to_s.length
       if gegner.krank > 0
         @window.attron(color_pair(berechneFarbe(Schwarz, Weiss))|A_NORMAL) {
           @window.addstr("!")
