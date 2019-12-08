@@ -1,6 +1,18 @@
+# coding: utf-8
+require 'zeileFuerZeile'
+require 'Spieler'
+require 'farben'
+
 class NutzenAnzeiger
   
   BeschreibungsBreite = 40
+  BefehleBeschreibung = [
+    "Pfeiltasten:Bewege ausgewähltes Feld",
+    "Ctrl + Pfeiltasten:Schnell bewegen",
+    "Enter:Verteidiger bauen/upgraden",
+    "' ':Diese Hilfe anzeigen",
+    "Ctrl + ' ':Kaufphase beenden"
+  ]
   
   def initialize()
   end
@@ -40,23 +52,66 @@ class NutzenAnzeiger
     end
   end
 
+  def beschreibungBefehleAnzeigen(y)
+    @fenster.setpos(y, 3)
+    @fenster.addstr("Kontrollen:")
+    y += 2
+    BefehleBeschreibung.each do |bB|
+      befehl, beschreibung = bB.split(":")
+      @fenster.setpos(y, 3)
+      @fenster.addstr(befehl + ": ")
+      zeileFuerZeile(beschreibung, BeschreibungsBreite + 1 - befehl.length).each do |zeile|
+        @fenster.setpos(y, 4 + befehl.length)
+        @fenster.addstr(zeile)
+        y += 1
+      end
+      y += 1
+    end
+    y += 1
+    return y
+  end
+
+  def kostenAnzeigen(y)
+    @fenster.setpos(y, 3)
+    @fenster.addstr("Preise:")
+    y += 2
+    @fenster.setpos(y, 3)
+    @fenster.addstr("Turm bauen: #{Spieler::TurmKosten}")
+    @fenster.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL){
+      @fenster.addstr("$")
+    }
+    y += 2
+    4.times do |i|
+      @fenster.setpos(y, 3)
+      @fenster.addstr("Turm auf Level #{i + 2} upgraden: #{Spieler::UpgradeKosten[i]}")
+      @fenster.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL){
+        @fenster.addstr("$")
+      }
+      y += 2
+    end
+    y += 1
+    return y
+  end
+  
   def anzeigen()
     @fenster.setpos(0,0)
     @fenster.addstr("/" + "-" * (@fensterBreite - 2) + "\\")
     y = 2
+    y = beschreibungBefehleAnzeigen(y)
+    y = kostenAnzeigen(y)
     Level1Sonderfaehigkeiten.each do |sf|
       zeigeKombination(3, y, sf.bedingung)
-      sf.beschreibung(BeschreibungsBreite).each do |zeile|
+      zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
         @fenster.setpos(y, 5)
         @fenster.addstr(zeile)
         y += 1
       end
       y += 1
     end
-    y += 3
+    y += 1
     Level2Sonderfaehigkeiten.each do |sf|
       zeigeKombination(2, y, sf.bedingung)
-      sf.beschreibung(BeschreibungsBreite).each do |zeile|
+      zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
         @fenster.setpos(y, 5)
         @fenster.addstr(zeile)
         y += 1
@@ -66,7 +121,7 @@ class NutzenAnzeiger
     y = 2
     Level3Sonderfaehigkeiten.each do |sf|
       zeigeKombination(BeschreibungsBreite + 7, y, sf.bedingung)
-      sf.beschreibung(BeschreibungsBreite).each do |zeile|
+      zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
         @fenster.setpos(y, BeschreibungsBreite + 11)
         @fenster.addstr(zeile)
         y += 1
@@ -76,7 +131,7 @@ class NutzenAnzeiger
     y = 2
     Level4Sonderfaehigkeiten.each do |sf|
       zeigeKombination(2 * BeschreibungsBreite + 13, y, sf.bedingung)
-      sf.beschreibung(BeschreibungsBreite).each do |zeile|
+      zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
         @fenster.setpos(y, 2 * BeschreibungsBreite + 18)
         @fenster.addstr(zeile)
         y += 1

@@ -54,8 +54,10 @@ class Feind
   end
   
   def vergiften(gift)
-    @vergiftungsCounter = MaxVergiftungsCounter
-    @gift = gift
+    if gift > @gift
+      @vergiftungsCounter = MaxVergiftungsCounter
+      @gift = gift
+    end
   end
 
   def vereisen()

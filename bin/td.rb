@@ -22,6 +22,7 @@ require 'BaumUpgradeFensterBuilder'
 require 'Spieler'
 
 KEY_ENTER_REAL = 10
+KEY_SLEERZEICHEN = 0
 KEY_SUP = 337
 KEY_SDOWN = 336
 
@@ -49,7 +50,7 @@ baumErsteller = BaumErsteller.new()
 spieler = Spieler.new()
 gegnerErsteller = GegnerErsteller.new(spielfeld.start, spieler)
 leiste = Leiste.new(Freiraum, breite, gegnerErsteller, spieler)
-feldFenster = FeldFenster.new(Freiraum, 0, spielfeld, baumErsteller, {nutzenAnzeiger: nutzenAnzeiger, baumUpgradeFensterBuilder: baumUpgradeFensterBuilder}, leiste)
+feldFenster = FeldFenster.new(Freiraum, 0, spielfeld, baumErsteller, {nutzenAnzeiger: nutzenAnzeiger, baumUpgradeFensterBuilder: baumUpgradeFensterBuilder}, leiste, spieler)
 begin
   cbreak
   noecho
@@ -62,12 +63,13 @@ begin
   baumUpgradeFensterBuilder.erstelle(hoehe, breite, Freiraum, 0, feldFenster)
   spielfeld.gegnerZahl = gegnerErsteller.anzahl
   gegnerArray = GegnerArray.new(nil, 0, 0, :pflanze, 1, spieler)
-  feldFenster.anfangsPhase
+  #feldFenster.anfangsPhase
   #10.times {feldFenster.anfangsPhase}
   #50.times {feldFenster.aktivePhase()}
   until spieler.verloren?()
     runde += 1
     gegnerErsteller.definiereGegner()
+    spieler.runde()
     feldFenster.aktivePhase()
     feldFenster.anzeigen()
     spielfeld.alleBoosten()

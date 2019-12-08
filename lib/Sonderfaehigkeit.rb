@@ -12,19 +12,7 @@ class Sonderfaehigkeit
     [@vordergrundFarbe, @hintergrundFarbe, @bild[y][x]]
   end
   
-  attr_reader :bedingung, :hintergrundDurchsetzungsvermoegen
+  attr_reader :bedingung, :hintergrundDurchsetzungsvermoegen, :beschreibung
 
-  def beschreibung(laenge)
-    woerter = @beschreibung.split(" ")
-    woerter.reduce([""]) do |anfang, wort|
-      if anfang[-1].length + wort.length < laenge
-        anfang[-1] += " " + wort
-      else
-        zeilenLaenge = wort.length + 1
-        anfang.push(" " + wort)
-      end
-      anfang
-    end
-  end
 end
   

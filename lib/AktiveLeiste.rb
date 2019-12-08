@@ -70,6 +70,9 @@ class AktiveLeiste
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
+      else
+        @window.setpos(1, verschiebung + 19)
+        @window.addstr(" ")
       end
       @window.setpos(2, verschiebung + 12)
       @window.addstr("->:")
@@ -80,30 +83,39 @@ class AktiveLeiste
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
+      else
+        @window.setpos(2, verschiebung + 19)
+        @window.addstr(" ")
       end
-      @window.setpos(1, verschiebung + 21)
+      @window.setpos(0, verschiebung + 21)
       feuer = baum.berechneSchaden(:feuer).to_s
       @window.addstr(" " * (3 - feuer.length))
       @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
         @window.addstr(feuer)
       }
       if baum.staerkeBoost
-        @window.setpos(1, verschiebung + 24)
+        @window.setpos(0, verschiebung + 24)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
+      else
+        @window.setpos(0, verschiebung + 24)
+        @window.addstr(" ")
       end
-      @window.setpos(0, verschiebung + 21)
+      @window.setpos(1, verschiebung + 21)
       pflanze = baum.berechneSchaden(:pflanze).to_s
       @window.addstr(" " * (3 - pflanze.length))
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr(pflanze)
       }
       if baum.staerkeBoost
-        @window.setpos(0, verschiebung + 24)
+        @window.setpos(1, verschiebung + 24)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
+      else
+        @window.setpos(1, verschiebung + 24)
+        @window.addstr(" ")
       end
       @window.setpos(2, verschiebung + 21)
       wasser = baum.berechneSchaden(:wasser).to_s
@@ -116,6 +128,9 @@ class AktiveLeiste
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
+      else
+        @window.setpos(2, verschiebung + 24)
+        @window.addstr(" ")
       end
       @window.setpos(3, verschiebung + 12)
       baum.level().times do |upgradeNummer|
@@ -195,11 +210,7 @@ class AktiveLeiste
   end
 
   def phaseAnzeigen(verschiebung)
-    if bauPhase
-      text = "Bauphase"
-    else
-      text = "Upgradephase"
-    end
+    text = "Bauphase"
     3.times do |i|
       @window.setpos(i, verschiebung)
       @window.addstr(" " * 21)
@@ -229,13 +240,23 @@ class AktiveLeiste
       end
     end
   end
+
+  def geldAnzeigen(verschiebung)
+    @window.setpos(1, verschiebung)
+    gold = @spieler.gold.to_s
+    @window.addstr(" " * (5 - gold.length) + gold)
+    @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
+      @window.addstr("$")
+    }
+  end
   
   def anzeigen(baum)
     lebenAnzeigen(2)
     phaseAnzeigen(10)
     #phaseAnzeigen(3)
-    baumAnzeigen(baum, 27)
-    gegnerAnzeigen(54)
+    geldAnzeigen(23)
+    baumAnzeigen(baum, 30)
+    gegnerAnzeigen(57)
     @window.refresh()
   end
 

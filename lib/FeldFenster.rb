@@ -3,7 +3,10 @@ require 'colorize'
 require 'Baum'
 
 class FeldFenster
-  def initialize(verschiebungy, verschiebungx, spielfeld, baumErsteller, menues, leiste)
+  BonusLeben = 10
+  
+  def initialize(verschiebungy, verschiebungx, spielfeld, baumErsteller, menues, leiste, spieler)
+    @spieler = spieler
     @hoehe = spielfeld.hoehe
     @breite = spielfeld.breite
     @verschiebungy = verschiebungy
@@ -37,7 +40,9 @@ class FeldFenster
     if @spielerAktiv
       if @spielfeld.hatBaum?(@position[0], @position[1])
         baum = @spielfeld.gibBaum(@position[0], @position[1])
+        @leiste.bauPhaseAnfangen()
       else
+        @leiste.bauPhaseBeenden()
         baum = nil
       end
       @leiste.aktivAnzeigen(baum)
@@ -114,12 +119,13 @@ class FeldFenster
   end
   
   def nah?(x, y)
-    if @baumErsteller.aktiv
-      reichweite = @baumErsteller.reichweite
-    elsif @spielfeld.istWeg?(@position[0], @position[1]) or not @spielfeld.hatBaum?(@position[0], @position[1])
-      return false
-    else
+    if @spielfeld.hatBaum?(@position[0], @position[1])
       reichweite = @spielfeld.gibBaum(@position[0], @position[1]).reichweite()
+    elsif @spielfeld.istWeg?(@position[0], @position[1]) or not @spielfeld.hatBaum?(@position[0], @position[1])
+      reichweite = @baumErsteller.reichweite
+    else
+      raise
+      return false
     end
     ((x - @position[0]) ** 2 + (y - @position[1]) ** 2 <= reichweite ** 2)
   end
@@ -133,14 +139,14 @@ class FeldFenster
   end
 
   def positionBaubar?()
-    positionLegal and not @spielfeld.hatBaum?(@position[0], @position[1])
+    positionLegal and not @spielfeld.hatBaum?(@position[0], @position[1]) and @spieler.kannTurmBauen?()
   end
   
   def positionErweiterbar?()
     return false unless @spielfeld.hatBaum?(@position[0], @position[1])
     baum = @spielfeld.gibBaum(@position[0], @position[1])
     return false if baum.level == 4
-    return false if @baumLevel[baum.level + 1] + 2 > @baumLevel[baum.level]
+    #return false if @baumLevel[baum.level + 1] + 2 > @baumLevel[baum.level]
     true
   end
   
@@ -156,12 +162,30 @@ class FeldFenster
       eingabe = eingeben()
       if eingabe == :bauen and positionBaubar?()
         @spielfeld.pflanzeBaum(@position, @baumErsteller.erstelleBaum(@position.dup))
+        @spieler.turmBezahlen()
         @baumLevel[0] += 1
-        @leiste.bauPhaseBeenden()
+      elsif eingabe == :bauen and positionErweiterbar?()
+        baum = @spielfeld.gibBaum(@position[0], @position[1])
+        if @spieler.turmUpgradebar?(baum.level + 1)
+          wahl = @menues[:baumUpgradeFensterBuilder].waehlen(baum)
+          if wahl != :nichts
+            @spieler.upgradeBezahlen(baum.level)
+            @spieler.leben += BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
+            @baumLevel[baum.level - 1] -= 1
+            @baumLevel[baum.level] += 1
+          end
+        end
+      elsif eingabe == :fertig
+        bauPhaseBeenden()
         return 0
       end
       anzeigen()
     end
+  end
+
+  def bauPhaseBeenden()
+    @spielerAktiv = false
+    anzeigen()
   end
 
   def baumErweiterPhase()
@@ -173,6 +197,7 @@ class FeldFenster
         baum = @spielfeld.gibBaum(@position[0], @position[1])
         wahl = @menues[:baumUpgradeFensterBuilder].waehlen(baum)
         if wahl != :nichts
+          @spieler.leben += BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
           @baumLevel[baum.level - 1] -= 1
           @baumLevel[baum.level] += 1
           @spielerAktiv = false
@@ -186,7 +211,7 @@ class FeldFenster
 
   def eingeben()
     m = @karte.getch
-    if m == KEY_SUP
+      if m == KEY_SUP
       @position[1] -= 7
       @position[1] %= @hoehe
     elsif m == KEY_SDOWN
@@ -212,6 +237,8 @@ class FeldFenster
       @position[0] %= @breite
     elsif m == KEY_ENTER_REAL
       return :bauen
+    elsif m == KEY_SLEERZEICHEN
+      return :fertig
     elsif m == " "
       begin
         @menues[:nutzenAnzeiger].oeffnen()
@@ -242,7 +269,7 @@ class FeldFenster
       @leiste.aktivieren(@baumLevel)
       erneuern()
       baumBauPhase()
-      baumErweiterPhase()
+      #baumErweiterPhase()
     ensure
       @leiste.deaktivieren()
     end

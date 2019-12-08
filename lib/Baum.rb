@@ -13,7 +13,7 @@ class Baum
   MaxLaden = 10
   LadenBoostLevel1 = 2
   LadenBoostLevel2 = 6
-  SchnellLadenStaerkeMalusLevel2 = 0.5
+  SchnellLadenStaerkeMalusLevel2 = 0.4
   AllroundLadeBoost = 2
   AllroundStaerkeBoost = 1.3
   AllroundReichweiteBoost = 1
@@ -47,7 +47,11 @@ class Baum
   end
 
   attr_reader :staerkeBoost, :geschwindigkeitsBoost, :reichweiteBoost
-  
+
+  def hatUpgrade?(bedingung)
+    @upgrades.upgrade?(bedingung)
+  end
+    
   def staerkeBoosten()
     @staerkeBoost = true
   end
@@ -178,18 +182,17 @@ class Baum
   
   def berechneSchaden(typ, lp = 0)
     schaden = GrundSchaden
-    schaden += lp * ProzentLP / 100 if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
     schaden *= KoenigsStaerkeBoost if @staerkeBoost
     effektivitaetsLevel = @upgrades.effektivitaetsLevel()
-    effektivitaetsLevel = 4 if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)
-    
+    effektivitaetsLevel = 4 if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)    
     if @upgrades.upgrades.length >= 1
       schaden += EffektivBoni[effektivitaetsLevel - 1] if effektiv?(@upgrades.typ, typ)
       schaden -= IneffektivMali[effektivitaetsLevel - 1] if ineffektiv?(@upgrades.typ, typ)
     end
+    schaden *= (1 + lp * ProzentLP / 100) if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
     schaden *= StaerkeBoostLevel1 if @upgrades.upgrade?(StaerkeSonderfaehigkeit.bedingung)
     schaden *= StaerkeBoostLevel2 if @upgrades.upgrade?(Staerke2Sonderfaehigkeit.bedingung)
-    schaden *= SchnellLadenStaerkeMalusLevel2 if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung)
+    schaden *= (1 - SchnellLadenStaerkeMalusLevel2) if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung)
     schaden *= AllroundStaerkeBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
     [(schaden + 0.5).to_i, 1].max
   end

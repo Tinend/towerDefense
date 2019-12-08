@@ -1,4 +1,5 @@
 require 'BaumUpgradeFenster'
+require 'zeileFuerZeile'
 
 class BaumUpgradeFenster
   Wahlen = [:nichts, :feuer, :pflanze, :wasser]
@@ -63,7 +64,7 @@ class BaumUpgradeFenster
     @baum.sonderfaehigkeiten.each_with_index do |sf, index|
       x = 5 - index
       zeigeKombination(x, y, @baum.sonderfaehigkeiten()[index].bedingung)
-      sf.beschreibung(@fensterBreite - 8).each do |zeile|
+      zeileFuerZeile(sf.beschreibung, @fensterBreite - 8).each do |zeile|
         @fenster.setpos(y, 6)
         @fenster.addstr(zeile)
         @fenster.addstr(" " * (@fensterBreite - 8 - zeile.length))

@@ -2,9 +2,9 @@ require 'GegnerArray'
 
 class GegnerErsteller
   Typen = [:wasser, :pflanze, :feuer]
-  GeschwindigkeitAnzahlVerstaerkungsFaktor = 1.4
-  WenigeFeindeBonus = 4.5
-  AnzahlMalusBasis = 0.5
+  GeschwindigkeitAnzahlVerstaerkungsFaktor = 1.5
+  WenigeFeindeBonus = 12
+  AnzahlMalusBasis = 0.7
   
   def initialize(start, spieler)
     @start = start
