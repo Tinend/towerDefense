@@ -1,4 +1,6 @@
 require 'WegStueck'
+require 'FarbZeichen'
+require 'farben'
 
 class Feind
   MaxLaufErsparnis = 10
@@ -7,7 +9,17 @@ class Feind
   MaxVereisungsCounter = 100
   VerbrennWkeit = 0.6
   MaxKrank = 100
- 
+  PflanzenBild = [
+    "\\ A /",
+    "~(o)~",
+    "/ V \\"
+  ]
+  WasserBild = [
+    "\\  ) ",
+    "O X  ",
+    " (  \\"
+  ]
+  
   def initialize(maxLeben, wegStueck, typ, geschwindigkeit)
     @leben = maxLeben
     @maxLeben = maxLeben
@@ -148,18 +160,42 @@ class Feind
       @heilen = true
     end
   end
-
+  
   def feuerBild(x, y)
-    
+    if y == 0 and x == 3
+      return FarbZeichen.new(Gelb, Gelb, " ")
+    elsif y < 2 and 0 < x and x < 4
+      return FarbZeichen.new(Rot, Rot, " ")      
+    elsif x == 0 and y == (@bildNummer / 26) % 3
+      return FarbZeichen.new(Rot, Rot, " ")
+    elsif x == 0
+      return FarbZeichen.new(Blau, Blau, " ")
+    elsif x == 4 and y == (@bildNummer / 28) % 3
+      return FarbZeichen.new(Rot, Rot, " ")
+    elsif x == 4
+      return FarbZeichen.new(Blau, Blau, " ")
+    elsif x % 3 == (@bildNummer / 34) % 3
+      return FarbZeichen.new(Rot, Rot, " ")
+    else
+      return FarbZeichen.new(Blau, Blau, " ")      
+    end
+  end
+
+  def pflanzenBild(x, y)
+    FarbZeichen.new(Gruen, Blau, PflanzenBild[x][y])
+  end
+
+  def wasserBild(x,y)
+    FarbZeichen.new(Weiss, Blau, WasserBild[x][y])
   end
   
   def bild(x, y)
     if @typ == :feuer
-      feuerBild(x, y)
+      return feuerBild(x, y)
     elsif @typ == :pflanze
-      pflanzenBild(x, y)
+      return pflanzenBild(x, y)
     elsif @typ == :wasser
-      wasserBild(x, y)
+      return wasserBild(x, y)
     end
   end
 end

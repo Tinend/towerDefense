@@ -100,22 +100,13 @@ class FeldFenster
   def findeZeichen(x, y, xKlein, yKlein)
     return "\\" if ((xKlein == 1 and yKlein == 0) or (xKlein == 3 and yKlein == 2)) and x == @position[0] and y == @position[1] and @spielerAktiv
     return "/" if ((xKlein == 1 and yKlein == 2) or (xKlein == 3 and yKlein == 0)) and x == @position[0] and y == @position[1] and @spielerAktiv
-    return monsterZeichen(xKlein, yKlein) if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
+    return @spielfeld.feindBild(x, y, xKlein, yKlein) if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
     return "~" if xKlein == 2 and yKlein == 1 and @spielfeld.istWeg?(x, y)
     if @spielfeld.hatBaum?(x, y)
       return @spielfeld.baumZeichen(x, y, xKlein, yKlein)
     end
     return "+" if (xKlein == 0 or xKlein == 4) and (yKlein == 0 or yKlein == 2) and not @spielfeld.istWeg?(x, y)
     return " "
-  end
-  
-  def monsterZeichen(x, y)
-    monster = [
-      "/---\\",
-      "|O O|",
-      "\\---/"
-    ]
-    return monster[y][x]
   end
   
   def nah?(x, y)

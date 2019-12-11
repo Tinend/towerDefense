@@ -37,6 +37,10 @@ class WegStueck
   def hatFeind?() 
     (@feinde.length > 0)
   end
+
+  def feindBild(x, y)
+    @feinde[0].bild(x, y)
+  end
   
   def leeren()
     @feinde.delete_if {|feind| feind.leben <= 0}

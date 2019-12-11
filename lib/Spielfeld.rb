@@ -39,6 +39,10 @@ class Spielfeld
   def hatFeind?(x,y)
     (@spielfeld[y][x].istWeg?() and @spielfeld[y][x].hatFeind?())
   end
+
+  def feindBild(x, y, xKlein, yKlein)
+    @spielfeld[y][x].feindBild(xKlein, yKlein)
+  end
   
   def istFeld?(x,y)
     (not @spielfeld[y][x].istWeg?())

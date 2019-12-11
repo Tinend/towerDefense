@@ -39,6 +39,15 @@ class WegStuecke
     @wegStuecke.any? {|wegStueck| wegStueck.hatFeind?()}
   end
 
+  def feindBild(x, y)
+    @wegStuecke.each do |wS|
+      if wS.hatFeind?()
+        return wS.feindBild(x, y)
+      end
+    end
+    raise
+  end
+  
   def leeren()
     @feinde.delete_if {|feind| feind.leben <= 0}
   end
