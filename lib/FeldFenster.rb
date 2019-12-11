@@ -78,7 +78,7 @@ class FeldFenster
   
   def findeVordergrundFarbe(x, y, xKlein, yKlein)
     return Rot if (xKlein == 1 or xKlein == 3) and (yKlein == 0 or yKlein == 2) and x == @position[0] and y == @position[1] and @spielerAktiv
-    return Rot if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
+    return @spielfeld.feindBild(x, y, xKlein, yKlein).vordergrundFarbe if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
     return @spielfeld.feldFarbe(x, y) if @spielfeld.istWeg?(x, y)
     if @spielfeld.hatBaum?(x, y)
       return @spielfeld.baumVordergrundFarbe(x, y, xKlein, yKlein)
@@ -93,6 +93,7 @@ class FeldFenster
       return @spielfeld.baumHintergrundFarbe(x, y, xKlein, yKlein, farbe)
     end
     return Magenta if @spielfeld.istWeg?(x, y) and nah?(x, y) and @spielerAktiv
+    return @spielfeld.feindBild(x, y, xKlein, yKlein).hintergrundFarbe if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
     return Blau if @spielfeld.istWeg?(x, y)
     return farbe
   end
@@ -100,7 +101,7 @@ class FeldFenster
   def findeZeichen(x, y, xKlein, yKlein)
     return "\\" if ((xKlein == 1 and yKlein == 0) or (xKlein == 3 and yKlein == 2)) and x == @position[0] and y == @position[1] and @spielerAktiv
     return "/" if ((xKlein == 1 and yKlein == 2) or (xKlein == 3 and yKlein == 0)) and x == @position[0] and y == @position[1] and @spielerAktiv
-    return @spielfeld.feindBild(x, y, xKlein, yKlein) if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
+    return @spielfeld.feindBild(x, y, xKlein, yKlein).zeichen if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
     return "~" if xKlein == 2 and yKlein == 1 and @spielfeld.istWeg?(x, y)
     if @spielfeld.hatBaum?(x, y)
       return @spielfeld.baumZeichen(x, y, xKlein, yKlein)

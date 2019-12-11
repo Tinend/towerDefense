@@ -15,9 +15,9 @@ class Feind
     "/ V \\"
   ]
   WasserBild = [
-    "\\  ) ",
-    "O X  ",
-    " (  \\"
+    "   ) ",
+    "  X  ",
+    " (   "
   ]
   
   def initialize(maxLeben, wegStueck, typ, geschwindigkeit)
@@ -162,15 +162,15 @@ class Feind
   end
   
   def feuerBild(x, y)
-    if y == 0 and x == 3
+    if y == 2 and x == 2
       return FarbZeichen.new(Gelb, Gelb, " ")
-    elsif y < 2 and 0 < x and x < 4
+    elsif y > 0 and 0 < x and x < 4
       return FarbZeichen.new(Rot, Rot, " ")      
-    elsif x == 0 and y == (@bildNummer / 26) % 3
+    elsif x == 0 and y == (-@bildNummer / 26) % 3
       return FarbZeichen.new(Rot, Rot, " ")
     elsif x == 0
       return FarbZeichen.new(Blau, Blau, " ")
-    elsif x == 4 and y == (@bildNummer / 28) % 3
+    elsif x == 4 and y == (-@bildNummer / 28) % 3
       return FarbZeichen.new(Rot, Rot, " ")
     elsif x == 4
       return FarbZeichen.new(Blau, Blau, " ")
@@ -182,11 +182,11 @@ class Feind
   end
 
   def pflanzenBild(x, y)
-    FarbZeichen.new(Gruen, Blau, PflanzenBild[x][y])
+    FarbZeichen.new(Gruen, Blau, PflanzenBild[y][x])
   end
 
   def wasserBild(x,y)
-    FarbZeichen.new(Weiss, Blau, WasserBild[x][y])
+    FarbZeichen.new(Weiss, Blau, WasserBild[y][x])
   end
   
   def bild(x, y)

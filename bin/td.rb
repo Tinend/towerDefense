@@ -86,7 +86,7 @@ begin
         gegnerArray.sterben()
         gegnerArray.verletzen()
         feldFenster.kurzAnzeigen() if zeitpunkt % 3 == 0
-        sleep(0.001)
+        sleep(0.003)
       end
     ensure
       leiste.inaktivSchliessen()
