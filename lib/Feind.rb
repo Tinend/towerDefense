@@ -23,9 +23,10 @@ class Feind
     @vereisungsCounter = 0
     @start = wegStueck
     @krank = 0
+    @bildNummer = maxLeben
     @heilt = false
   end
-
+  
   attr_accessor :leben
   attr_reader :typ, :laufDistanz, :verlangsamungsCounter, :vereisungsCounter, :vergiftungsCounter, :krank, :maxLeben
 
@@ -46,7 +47,8 @@ class Feind
   end
 
   def erkranken(schaden)
-    @krank = [@krank, schaden].max
+    neuKrank = schaden * (0.1 + @maxLeben / 100000.0)
+    @krank = [@krank, neuKrank].max
   end
   
   def verlangsamen()
@@ -82,7 +84,7 @@ class Feind
   end
   
   def laufen()
-    @leben -= 1 if @krank > rand(100)
+    @leben -= (@krank + rand(0)).to_i
     if @wegStueck.brennen and rand(0) <= VerbrennWkeit
       @leben -= 1
     end
@@ -96,10 +98,12 @@ class Feind
       @vereisungsCounter -= 1
       @verlangsamungsCounter -= 1 if @verlangsamungsCounter > 0
     elsif @verlangsamungsCounter > 0
+      @bildNummer += 1
       @laufErsparnis += @geschwindigkeit / 2
       @laufDistanz += @geschwindigkeit / 2
       @verlangsamungsCounter -= 1
     else
+      @bildNummer += 2
       @laufErsparnis += @geschwindigkeit
       @laufDistanz += @geschwindigkeit
     end
@@ -142,6 +146,20 @@ class Feind
   def heile(staerke)
     if @leben > 0 and staerke >= @leben
       @heilen = true
+    end
+  end
+
+  def feuerBild(x, y)
+    
+  end
+  
+  def bild(x, y)
+    if @typ == :feuer
+      feuerBild(x, y)
+    elsif @typ == :pflanze
+      pflanzenBild(x, y)
+    elsif @typ == :wasser
+      wasserBild(x, y)
     end
   end
 end

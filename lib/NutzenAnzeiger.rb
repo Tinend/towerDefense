@@ -6,9 +6,9 @@ require 'farben'
 class NutzenAnzeiger
   
   BeschreibungsBreite = 40
+  FensterHoehe = 52
   BefehleBeschreibung = [
-    "Pfeiltasten:Bewege ausgewähltes Feld",
-    "Ctrl + Pfeiltasten:Schnell bewegen",
+    "Pfeiltasten:Bewege ausgewähltes Feld; Mit Ctrl schneller",
     "Enter:Verteidiger bauen/upgraden",
     "' ':Diese Hilfe anzeigen",
     "Ctrl + ' ':Kaufphase beenden"
@@ -23,8 +23,8 @@ class NutzenAnzeiger
     @elternFenster = elternFenster
     @verschiebungy = verschiebungy
     @verschiebungx = verschiebungx
-    @fensterBreite = BeschreibungsBreite * 3 + 22
-    @fensterHoehe = 52
+    @fensterBreite = BeschreibungsBreite * 3 + 19
+    @fensterHoehe = FensterHoehe
     @wahl = 0
   end
 
@@ -120,19 +120,25 @@ class NutzenAnzeiger
     end
     y = 2
     Level3Sonderfaehigkeiten.each do |sf|
-      zeigeKombination(BeschreibungsBreite + 7, y, sf.bedingung)
+      zeigeKombination(BeschreibungsBreite + 8, y, sf.bedingung)
       zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
-        @fenster.setpos(y, BeschreibungsBreite + 11)
+        @fenster.setpos(y, BeschreibungsBreite + 12)
         @fenster.addstr(zeile)
         y += 1
       end
       y += 1
     end
-    y = 2
+    y += 1
+    x = BeschreibungsBreite + 7
     Level4Sonderfaehigkeiten.each do |sf|
-      zeigeKombination(2 * BeschreibungsBreite + 13, y, sf.bedingung)
+      laenge = zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).length
+      if laenge + y >= @fensterHoehe
+        x = 2 * BeschreibungsBreite + 13
+        y = 2
+      end
+      zeigeKombination(x, y, sf.bedingung)
       zeileFuerZeile(sf.beschreibung, BeschreibungsBreite).each do |zeile|
-        @fenster.setpos(y, 2 * BeschreibungsBreite + 18)
+        @fenster.setpos(y, x + 5)
         @fenster.addstr(zeile)
         y += 1
       end

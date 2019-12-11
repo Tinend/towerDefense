@@ -3,7 +3,7 @@ require 'colorize'
 require 'Baum'
 
 class FeldFenster
-  BonusLeben = 10
+  BonusLeben = 3
   
   def initialize(verschiebungy, verschiebungx, spielfeld, baumErsteller, menues, leiste, spieler)
     @spieler = spieler

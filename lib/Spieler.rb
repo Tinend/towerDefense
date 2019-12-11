@@ -2,7 +2,7 @@ class Spieler
   
   MaxLeben = 20
   TurmKosten = 10
-  UpgradeKosten = [1, 6, 13, 39]
+  UpgradeKosten = [1, 6, 13, 40]
   GoldProRunde = 20
   
   def initialize()

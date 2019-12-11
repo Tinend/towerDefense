@@ -14,14 +14,15 @@ class Spielfeld
   attr_accessor :gegnerZahl
   attr_reader :start, :minSchaden, :maxSchaden
 
-  def alleBoosten()
-    @baumKoordinaten.each do |bK|
-      boosten(bK)
+  def wellenBegin()
+    @baumKoordinaten.each do |koordinate|
+      baum = gibBaum(koordinate[0], koordinate[1])
+      baum.wellenBeginn()
+      boosten(baum)
     end
   end
 
-  def boosten(bKKoenig)
-    koenig = gibBaum(bKKoenig[0], bKKoenig[1])
+  def boosten(koenig)
     if koenig.staerkeKoenig?()
       @baumKoordinaten.each {|bK2| gibBaum(bK2[0], bK2[1]).staerkeBoosten() if koenig.kannErreichen?(bK2)}        
     elsif koenig.geschwindigkeitKoenig?()

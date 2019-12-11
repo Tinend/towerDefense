@@ -72,7 +72,7 @@ begin
     spieler.runde()
     feldFenster.aktivePhase()
     feldFenster.anzeigen()
-    spielfeld.alleBoosten()
+    spielfeld.wellenBegin()
     gegnerArray = gegnerErsteller.erstelleGegner()
     zeitpunkt = 0
     leiste.inaktivieren(gegnerArray)
@@ -85,8 +85,8 @@ begin
         spielfeld.schiessen(gegnerArray)
         gegnerArray.sterben()
         gegnerArray.verletzen()
-        feldFenster.kurzAnzeigen() if zeitpunkt % 1 == 0
-        sleep(0.003)
+        feldFenster.kurzAnzeigen() if zeitpunkt % 3 == 0
+        sleep(0.001)
       end
     ensure
       leiste.inaktivSchliessen()

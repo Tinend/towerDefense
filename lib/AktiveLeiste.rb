@@ -190,7 +190,14 @@ class AktiveLeiste
     string += " " * (24 - string.length)
     textBildUeberlagern(@window, verschiebung, 1, string, 0, 1, bild, schriftFarbe)
     
-    string = "Lebenspunkte:    #{@gegnerErsteller.staerke}"
+    if @gegnerErsteller.staerke >= 10**7
+      ziffern = Math::log(@gegnerErsteller.staerke, 10).to_i
+      signifikanteStellen = (@gegnerErsteller.staerke / (10 ** (ziffern - 1))).to_i / 10.0
+      staerkeString = signifikanteStellen.to_s + "e+" + ziffern.to_s
+    else
+      staerkeString = @gegnerErsteller.staerke.to_s
+    end
+    string = "Lebenspunkte:    " + staerkeString
     string += " " * (24 - string.length)
     textBildUeberlagern(@window, verschiebung, 2, string, 0, 2, bild, schriftFarbe)
     

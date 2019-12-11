@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'Upgrades'
 require 'GegnerSortierer'
 require 'ordnung/StandardGegnerOrdnung'
@@ -6,6 +7,7 @@ require 'ordnung/VergiftungsGegnerOrdnung'
 require 'ordnung/VereisungsGegnerOrdnung'
 require 'ordnung/KrankheitsGegnerOrdnung'
 require 'ordnung/ProzentSchadensGegnerOrdnung'
+require 'ordnung/HeilungsGegnerOrdnung'
 require 'ordnung/MultiOrdnung'
 require 'Sonderfaehigkeiten'
 
@@ -21,20 +23,29 @@ class Baum
   EffektivBoni = [5, 22, 58, 35]
   IneffektivMali = [2, 4, 6, 8]
   StaerkeBoostLevel1 = 4.0 / 3
-  StaerkeBoostLevel2 = 2
+  StaerkeWachsen = 0.1
   ReichweiteBoostLevel1 = 1
   ReichweiteBoostLevel2 = 2
   ReichweiteBoostLevel3 = 3
   ReichweiteBoostLevel4 = 4
   DoppelWkeit = 0.5
-  VereisungsWkeit = 0.01
+  VereisungsWkeit = 0.015
   InstaDeathWkeit = 0.025
   TeleportationsWkeit = 0.03
-  VersteinerungsWkeit = 0.0325
-  ProzentLP = 1.5
+  VersteinerungsWkeit = 0.025
+  ProzentLP = 3.0
   KoenigsReichweiteBoost = 1
   KoenigsGeschwindigkeitsBoost = 1
   KoenigsStaerkeBoost = 1.25
+  UpgradeNummer = {:feuer => 0, :pflanze => 1, :wasser => 2}
+  ErhoehungsAnzahl = 3
+  GeschwindigkeitsAnzahlBoost = 3
+  ReichweiteAnzahlBoost = 1
+  AllroundAnzahlBoost = 2
+  
+  @@upgrades = Array.new(81, 0)
+  @@reichweiteErhoehenAnzahlBonus = false # Bonus für viele +Reichweite Upgrades
+  @@GeschwindigkeitSteigernAnzahlBonus = false # Bonus für viele +Geschwindigkeit Upgrades
   
   def initialize(reichweite, position)
     @reichweite = reichweite
@@ -44,10 +55,15 @@ class Baum
     @reichweiteBoost = false
     @geschwindigkeitsBoost = false
     @staerkeBoost = false
+    @welle = 0
   end
 
   attr_reader :staerkeBoost, :geschwindigkeitsBoost, :reichweiteBoost
 
+  def wellenBeginn()
+    @welle += 1
+  end
+  
   def hatUpgrade?(bedingung)
     @upgrades.upgrade?(bedingung)
   end
@@ -93,10 +109,15 @@ class Baum
     r += ReichweiteBoostLevel1 if @upgrades.upgrade?(ReichweiteSonderfaehigkeit.bedingung())
     r += ReichweiteBoostLevel2 if @upgrades.upgrade?(Reichweite2Sonderfaehigkeit.bedingung())
     r += ReichweiteBoostLevel3 if @upgrades.upgrade?(Reichweite3Sonderfaehigkeit.bedingung())
-    r += ReichweiteBoostLevel4 if @upgrades.upgrade?(Reichweite4Sonderfaehigkeit.bedingung())
-    r += AllroundReichweiteBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+    r += @@upgrades[upgradsInZahl()] if @upgrades.upgrade?(Reichweite4Sonderfaehigkeit.bedingung())
+    if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+      allroundFaktor = 1
+      allroundFaktor = AllroundAnzahlBoost if @@upgrades[upgradsInZahl()] >= ErhoehungsAnzahl
+      r += AllroundReichweiteBoost * allroundFaktor
+    end
     r += KoenigsReichweiteBoost if @reichweiteBoost or reichweiteKoenig?()
-   return r
+    r += ReichweiteAnzahlBoost if @@reichweiteErhoehenAnzahlBonus
+    return r
   end
   
   def laden()
@@ -107,8 +128,13 @@ class Baum
     ladeZeit = MaxLaden
     ladeZeit -= LadenBoostLevel1 if @upgrades.upgrade?(SchnellLadenSondefaehigkeit.bedingung)
     ladeZeit -= LadenBoostLevel2 if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung)
-    ladeZeit -= AllroundLadeBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+    if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+      allroundFaktor = 1
+      allroundFaktor = AllroundAnzahlBoost if @@upgrades[upgradsInZahl()] >= ErhoehungsAnzahl
+      ladeZeit -= AllroundLadeBoost * allroundFaktor
+    end
     ladeZeit -= KoenigsGeschwindigkeitsBoost if @geschwindigkeitsBoost
+    ladeZeit -= GeschwindigkeitsAnzahlBoost if @@GeschwindigkeitSteigernAnzahlBonus
     [ladeZeit, 1].max
   end
 
@@ -125,16 +151,18 @@ class Baum
   end
 
   def zielenEinzel(gegnerArray)
-    if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
+    if @upgrades.upgrade?(VergiftungsSonderfaehigkeit.bedingung)
+      gegnerSortierer = GegnerSortierer.new(VergiftungsGegnerOrdnung)
+    elsif @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
       gegnerSortierer = GegnerSortierer.new(ProzentSchadensGegnerOrdnung)
     elsif @upgrades.upgrade?(VerlangsamungsSonderfaehigkeit.bedingung)
       gegnerSortierer = GegnerSortierer.new(VerlangsamungsGegnerOrdnung)
-    elsif @upgrades.upgrade?(VergiftungsSonderfaehigkeit.bedingung)
-      gegnerSortierer = GegnerSortierer.new(VergiftungsGegnerOrdnung)
     elsif @upgrades.upgrade?(VereisungsSonderfaehigkeit.bedingung)
       gegnerSortierer = GegnerSortierer.new(VereisungsGegnerOrdnung)
     elsif @upgrades.upgrade?(KrankheitSonderfaehigkeit.bedingung)
       gegnerSortierer = GegnerSortierer.new(KrankheitsGegnerOrdnung)
+    elsif @upgrades.upgrade?(HeilungsSonderfaehigkeit.bedingung)
+      gegnerSortierer = GegnerSortierer.new(HeilungsGegnerOrdnung)
     else
       gegnerSortierer = GegnerSortierer.new(StandardGegnerOrdnung)
     end
@@ -189,11 +217,15 @@ class Baum
       schaden += EffektivBoni[effektivitaetsLevel - 1] if effektiv?(@upgrades.typ, typ)
       schaden -= IneffektivMali[effektivitaetsLevel - 1] if ineffektiv?(@upgrades.typ, typ)
     end
-    schaden *= (1 + lp * ProzentLP / 100) if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
+    schaden *= (1 + lp * ProzentLP / 1000) if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
     schaden *= StaerkeBoostLevel1 if @upgrades.upgrade?(StaerkeSonderfaehigkeit.bedingung)
-    schaden *= StaerkeBoostLevel2 if @upgrades.upgrade?(Staerke2Sonderfaehigkeit.bedingung)
+    schaden *= StaerkeWachsen * @welle if @upgrades.upgrade?(StaerkeWachsenSonderfaehigkeit.bedingung)
     schaden *= (1 - SchnellLadenStaerkeMalusLevel2) if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung)
-    schaden *= AllroundStaerkeBoost if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+    if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
+      allroundFaktor = AllroundStaerkeBoost
+      allroundFaktor = (AllroundStaerkeBoost - 1) * AllroundAnzahlBoost + 1 if @@upgrades[upgradsInZahl()] >= ErhoehungsAnzahl
+      schaden *= AllroundStaerkeBoost 
+    end
     [(schaden + 0.5).to_i, 1].max
   end
 
@@ -208,13 +240,35 @@ class Baum
   def level()
     @upgrades.level()
   end
+
+  def upgradsInZahl()
+    @upgrades.upgrades.reduce(0) {|wert, upgrade| wert * 3 + UpgradeNummer[upgrade]}
+  end
   
   def upgraden(typ)
+    @welle = 0
     @upgrades.upgraden(typ)
+    if level == 4
+      @@upgrades[upgradsInZahl()] += 1
+      @@reichweiteErhoehenAnzahlBonus = true if @upgrades.upgrade?(Reichweite3Sonderfaehigkeit.bedingung()) and @@upgrades[upgradsInZahl()] >= ErhoehungsAnzahl
+      @@GeschwindigkeitSteigernAnzahlBonus = true if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung) and @@upgrades[upgradsInZahl()] >= ErhoehungsAnzahl
+    end
   end
 
   def downgraden()
+    if level == 4
+      @@upgrades[upgradsInZahl()] -= 1
+      @@reichweiteErhoehenAnzahlBonus = testeAnzahlBonus(Reichweite3Sonderfaehigkeit.bedingung()) if @upgrades.upgrade?(Reichweite3Sonderfaehigkeit.bedingung()) and @@upgrades[upgradsInZahl()] == ErhoehungsAnzahl - 1
+      @@GeschwindigkeitSteigernAnzahlBonus = testeAnzahlBonus(SchnellLaden2Sondefaehigkeit.bedingung) if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung) and @@upgrades[upgradsInZahl()] == ErhoehungsAnzahl - 1
+    end
     @upgrades.downgraden()
+  end
+
+  def testeAnzahlBonus(array)
+    array.permutation.to_a.any? {|permutation|
+      testZahl = permutation.reduce(0) {|wert, upgrade| wert * 3 + UpgradeNummer[upgrade]}
+      @@upgrades[testZahl] >= ErhoehungsAnzahl
+    }
   end
 
   def vordergrundFarbe(x, y)
