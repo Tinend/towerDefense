@@ -27,7 +27,7 @@ class Baum
   ReichweiteBoostLevel1 = 1
   ReichweiteBoostLevel2 = 2
   ReichweiteBoostLevel3 = 3
-  ReichweiteBoostLevel4 = 4
+  ReichweiteLevel4StaerkeBoost = 1
   DoppelWkeit = 0.5
   VereisungsWkeit = 0.015
   InstaDeathWkeit = 0.025
@@ -210,16 +210,17 @@ class Baum
   
   def berechneSchaden(typ, lp = 0)
     schaden = GrundSchaden
-    schaden *= KoenigsStaerkeBoost if @staerkeBoost
+    schaden += ReichweiteLevel4StaerkeBoost * @@upgrades[upgradsInZahl()] if @upgrades.upgrade?(Reichweite4Sonderfaehigkeit.bedingung())
     effektivitaetsLevel = @upgrades.effektivitaetsLevel()
     effektivitaetsLevel = 4 if @upgrades.upgrade?(SchwaechenStaerkerSonderfaehigkeit.bedingung)    
     if @upgrades.upgrades.length >= 1
       schaden += EffektivBoni[effektivitaetsLevel - 1] if effektiv?(@upgrades.typ, typ)
       schaden -= IneffektivMali[effektivitaetsLevel - 1] if ineffektiv?(@upgrades.typ, typ)
     end
+    schaden *= KoenigsStaerkeBoost if @staerkeBoost
     schaden *= (1 + lp * ProzentLP / 1000) if @upgrades.upgrade?(ProzentSchadenSondefaehigkeit.bedingung)
     schaden *= StaerkeBoostLevel1 if @upgrades.upgrade?(StaerkeSonderfaehigkeit.bedingung)
-    schaden *= StaerkeWachsen * @welle if @upgrades.upgrade?(StaerkeWachsenSonderfaehigkeit.bedingung)
+    schaden *= (1 + StaerkeWachsen * @welle) if @upgrades.upgrade?(StaerkeWachsenSonderfaehigkeit.bedingung)
     schaden *= (1 - SchnellLadenStaerkeMalusLevel2) if @upgrades.upgrade?(SchnellLaden2Sondefaehigkeit.bedingung)
     if @upgrades.upgrade?(AllroundSonderfaehigkeit.bedingung())
       allroundFaktor = AllroundStaerkeBoost

@@ -42,7 +42,7 @@ class FeldFenster
         baum = @spielfeld.gibBaum(@position[0], @position[1])
         @leiste.bauPhaseAnfangen()
       else
-        @leiste.bauPhaseBeenden()
+        @leiste.bauPhaseBeenden(@spielfeld.gibFeuer(@position[0], @position[1]))
         baum = nil
       end
       @leiste.aktivAnzeigen(baum)

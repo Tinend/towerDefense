@@ -85,8 +85,8 @@ begin
         spielfeld.schiessen(gegnerArray)
         gegnerArray.sterben()
         gegnerArray.verletzen()
-        feldFenster.kurzAnzeigen() if zeitpunkt % 3 == 0
-        sleep(0.003)
+        feldFenster.kurzAnzeigen() if ((zeitpunkt * 5) % runde) / 5 == 0
+        sleep(0.01 / (runde / 5.0 + 1))
       end
     ensure
       leiste.inaktivSchliessen()

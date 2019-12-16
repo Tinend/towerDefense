@@ -7,7 +7,7 @@ class Feind
   MaxVerlangsamungsCounter = 30
   MaxVergiftungsCounter = 100
   MaxVereisungsCounter = 100
-  VerbrennWkeit = 0.6
+  VerbrennFaktor = 20
   MaxKrank = 100
   PflanzenBild = [
     "\\ A /",
@@ -97,9 +97,6 @@ class Feind
   
   def laufen()
     @leben -= (@krank + rand(0)).to_i
-    if @wegStueck.brennen and rand(0) <= VerbrennWkeit
-      @leben -= 1
-    end
     if @vergiftungsCounter > 0
       schaden = (@gift.to_f / @vergiftungsCounter + rand(0)).to_i
       @leben -= schaden
@@ -110,12 +107,12 @@ class Feind
       @vereisungsCounter -= 1
       @verlangsamungsCounter -= 1 if @verlangsamungsCounter > 0
     elsif @verlangsamungsCounter > 0
-      @bildNummer += 1
+      @bildNummer += 1 unless versteinert?()
       @laufErsparnis += @geschwindigkeit / 2
       @laufDistanz += @geschwindigkeit / 2
       @verlangsamungsCounter -= 1
     else
-      @bildNummer += 2
+      @bildNummer += 2 unless versteinert?()
       @laufErsparnis += @geschwindigkeit
       @laufDistanz += @geschwindigkeit
     end
@@ -129,6 +126,7 @@ class Feind
       @wegStueck = @wegStueck.naechstes
       if @wegStueck != nil
         @wegStueck.feinde.push(self)
+        @leben -= @wegStueck.brennen / VerbrennFaktor
       end
     end
   end

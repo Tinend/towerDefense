@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'Sonderfaehigkeit'
 require 'farben'
+require 'Feind'
 
 FeuerSonderfaehigkeit = Sonderfaehigkeit.new([:feuer], "+5 Schaden gegen Pflanzengeister; -2 Schaden gegen Wassergeister", Rot, Cyan, ["     ", "  M  ", "     "], false)
 PflanzeSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze], "+5 Schaden gegen Wassergeister; -2 Schaden gegen Feuergeister an", Gruen, Cyan, ["     ", "  Y  ", "     "], false)
@@ -28,13 +29,13 @@ Wasser3Sonderfaehigkeit = Sonderfaehigkeit.new([:wasser, :wasser, :wasser], "+36
 Level3Sonderfaehigkeiten = [Feuer3Sonderfaehigkeit, DoppelterSchadenSonderfaehigkeit, Reichweite2Sonderfaehigkeit, VergiftungsSonderfaehigkeit, SchwaechenStaerkerSonderfaehigkeit, SplashSonderfaehigkeit, Pflanze3Sonderfaehigkeit, VerlangsamungsSonderfaehigkeit, VereisungsSonderfaehigkeit, Wasser3Sonderfaehigkeit]
 
 InstaDeathSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :feuer], "2.5% Chance auf Insta-Death", Gelb, Rot, ["/\\ /\\", "     ", "/\\ /\\"], true)
-BrandSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :pflanze], "Erzündet dauerhaft ein Feuer auf dem Zielfeld, das jedem Gegner dort jede Runde 60% sicher ein Leben nimmt", Rot, Cyan, ["     ", "     ", "ÜÜ ÜÜ"], false)
-Reichweite4Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :wasser], "+x Reichweite, wobei x die Anzahl der Türmen mit identischen Upgrades ist", Gruen, Cyan, ["\\\\ //", "     ", "// \\\\"], false)
+BrandSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :pflanze], "Erzündet dauerhaft ein Feuer auf dem Zielfeld. #{Feind::VerbrennFaktor} Feuer verursachen bei jedem Feind, der das Feld betritt 1 Lp Schaden.", Rot, Cyan, ["     ", "     ", "ÜÜ ÜÜ"], false)
+Reichweite4Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :feuer, :wasser], "+x Reichweite, +x Staerke, wobei x die Anzahl der Türmen mit identischen Upgrades ist", Gruen, Cyan, ["\\\\ //", "     ", "// \\\\"], false)
 ProzentSchadenSondefaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :pflanze, :pflanze],  "Gegnerische Leben * 0.3% mehr Schaden. Attackiert bevorzugt stärkere Gegner", Gelb, Cyan, ["   %%", "     ", "%%   "], false)
 SchnellLaden2Sondefaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :pflanze, :wasser], "-6 Schussrate, 40% weniger Schaden; -3 Schussrate für alle Verteidiger, bei 3 Türmen mit identischen Upgrades", Gelb, Cyan, ["ZZ ZZ", "     ", "ZZ ZZ"], false)
 HeilungsSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :feuer, :wasser, :wasser], "Heilt dich um 1 Lebenspunkt, wenn ein Baum mit dieser Fähigkeit einen Gegner besiegt. Wenn dieser Upgrade gemacht wird, bekommst du 3 Lebenspunkte", Rot, Cyan, ["/\\ /\\", "\\   /", " \\_/  "], false)
 KrankheitSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :pflanze, :pflanze], "Macht Getroffenen dauerhaft krank. Dieser verliert SCHADEN*(0.1+LPMAX/100'000) Leben pro Runde. SCHADEN ist der Schaden vom Schuss und LPMAX die Maximalleben des Feindes. Vermeidet Schiessen auf Kranke, wenn möglich", Weiss, Schwarz, ["     ", "     ", "_ö__L"], true)
-StaerkeWachsenSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :pflanze, :wasser], "Schaden wird auf 10x% gesetzt, wobei x die Anzahl an Runden ist, die dieser Turm vollständig geupgradet ist", Schwarz, Cyan, ["XX XX", "     ", "YW WY"], false)
+StaerkeWachsenSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :pflanze, :wasser], "Schaden dieses Turms erhöht sich jede Runde um 10% (linear)", Schwarz, Cyan, ["XX XX", "     ", "YW WY"], false)
 Reichweite3Sonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :pflanze, :wasser, :wasser], "+3 Reichweite; +1 Reichweite für alle Verteidiger, bei 3 Türmen mit identischen Upgrades", Magenta, Cyan, ["\\\\ //", "     ", "// \\\\"], false)
 ReichweiteKoenigSonderfaehigkeit = Sonderfaehigkeit.new([:feuer, :wasser, :wasser, :wasser], "+1 Reichweite für alle Verteidiger in Reichweite", Rot, Blau, ["|    ", "|    ", "L____"], true)
 VersteinerungSonderfaehigkeit = Sonderfaehigkeit.new([:pflanze, :pflanze, :pflanze, :pflanze], "2.5% Chance auf Versteinerung", Weiss, Cyan, ["OO OO", "     ", "OO OO"], true)

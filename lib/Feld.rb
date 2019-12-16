@@ -14,6 +14,10 @@ class Feld
     false
   end
 
+  def brennen()
+    0
+  end
+  
   def anzeigen()
     baum.anzeigen()
   end

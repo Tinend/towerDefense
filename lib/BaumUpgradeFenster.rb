@@ -74,7 +74,7 @@ class BaumUpgradeFenster
       @fenster.addstr(" " * (@fensterBreite - 2))
       y += 1
     end
-    [6, @fensterHoehe - y - 2].min.times do
+    [6, @fensterHoehe - y - 1].min.times do
       @fenster.setpos(y, 1)
       @fenster.addstr(" " * (@fensterBreite - 2))
       y += 1

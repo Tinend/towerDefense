@@ -6,6 +6,7 @@ require 'farben'
 require 'bilder/FeuerBild'
 require 'bilder/WasserBild'
 require 'bilder/PflanzenBild'
+require 'Feind'
 
 # Anzeige der Oberen Leiste, während der Spieler aktiv ist
 class AktiveLeiste
@@ -21,9 +22,10 @@ class AktiveLeiste
     @gegnerErsteller = gegnerErsteller
     @bauPhase = true
     @spieler = spieler
+    @feuer = feuer
   end
 
-  attr_accessor :bauPhase
+  attr_accessor :bauPhase, :feuer
   
   def oeffnen(baumLevel)
     @baumLevel = baumLevel
@@ -222,11 +224,11 @@ class AktiveLeiste
       @window.setpos(i, verschiebung)
       @window.addstr(" " * 21)
     end
-    @window.setpos(0, verschiebung + (14 - text.length) / 2)
+    @window.setpos(0, verschiebung + (13 - text.length) / 2)
     @window.addstr("+" + "-" * text.length + "+")
-    @window.setpos(1, verschiebung + (14 - text.length) / 2)
+    @window.setpos(1, verschiebung + (13 - text.length) / 2)
     @window.addstr("|" + text + "|")
-    @window.setpos(2, verschiebung + (14 - text.length) / 2)
+    @window.setpos(2, verschiebung + (13 - text.length) / 2)
     @window.addstr("+" + "-" * text.length + "+")
   end
 
@@ -256,6 +258,41 @@ class AktiveLeiste
       @window.addstr("$")
     }
   end
+
+  def feuerAnzeigen(verschiebung)
+    @window.setpos(0, verschiebung + 1)
+    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+      @window.addstr(" ")
+    }
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+      @window.addstr("   ")
+    }
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+      @window.addstr("   ")
+    }
+    @window.setpos(2, verschiebung + 1)
+    @window.attron(color_pair(berechneFarbe(Gelb, Gelb))|A_NORMAL) {
+      @window.addstr(" ")
+    }
+    @window.setpos(3, verschiebung + 1)
+    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
+      @window.addstr(" ")
+    }
+    @window.setpos(2, verschiebung + 4)
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr(@feuer.to_s)
+    }
+    if @feuer >= Feind::VerbrennFaktor
+      @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+        @window.addstr(" (" + (@feuer / Feind::VerbrennFaktor).to_s + ")")
+      }
+    else
+      @window.addstr("     ")
+    end
+    @window.addstr("     ")
+  end
   
   def anzeigen(baum)
     lebenAnzeigen(2)
@@ -263,6 +300,9 @@ class AktiveLeiste
     #phaseAnzeigen(3)
     geldAnzeigen(23)
     baumAnzeigen(baum, 30)
+    if @feuer > 0
+      feuerAnzeigen(30)
+    end
     gegnerAnzeigen(57)
     @window.refresh()
   end

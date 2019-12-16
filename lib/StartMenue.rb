@@ -33,12 +33,12 @@ class StartMenue
   end
 
   def waehleMittel()
-    @gegnerErsteller.staerkePolynom = [0.25, 12, 3]
+    @gegnerErsteller.staerkePolynom = [0.35, 2, 10]
     @spieler.leben = 30
   end
 
   def waehleSchwierig()
-    @gegnerErsteller.staerkePolynom = [0.5, 10, 3]
+    @gegnerErsteller.staerkePolynom = [0.55, 5, 10]
     @spieler.leben = 20
   end
   

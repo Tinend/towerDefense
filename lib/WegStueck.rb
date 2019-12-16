@@ -1,19 +1,20 @@
 require 'Feind'
 
 class WegStueck
+  
   def initialize(naechstes, nr)
     @nr = nr
     @naechstes = naechstes
     @feinde = []
     @position = [0, 0]
-    @brennen = false
+    @brennen = 0
   end
 
   attr_reader :nr, :naechstes, :brennen
   attr_accessor :feinde, :position
   
   def anzuenden()
-    @brennen = true
+    @brennen += 1
   end
 
   def nummern
@@ -21,7 +22,7 @@ class WegStueck
   end
   
   def farbe()
-    if @feinde == [] and not @brennen
+    if @feinde == [] and @brennen < Feind::VerbrennFaktor
       return Weiss
     elsif @feinde == []
       return Rot

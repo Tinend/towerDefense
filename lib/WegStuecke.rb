@@ -1,13 +1,16 @@
 require 'WegStueck'
+require 'Feind'
 
 class WegStuecke
   def initialize()
     @wegStuecke = []
-    @brennen = false
+    @brennen = 0
   end
 
+  attr_reader :brennen
+  
   def anzuenden()
-    @brennen = true
+    @brennen += 1
     @wegStuecke.each do |wS|
       wS.anzuenden()
     end
@@ -79,7 +82,7 @@ class WegStuecke
   end
 
   def farbe()
-    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and not @brennen
+    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and @brennen < Feind::VerbrennFaktor
       return Weiss
     elsif @wegStuecke.all? {|wegStueck| wegStueck.feinde == []}
       return Rot

@@ -55,6 +55,10 @@ class Spielfeld
   def gibBaum(x,y)
     @spielfeld[y][x].baum
   end
+  
+  def gibFeuer(x,y)
+    @spielfeld[y][x].brennen
+  end
 
   def baumVordergrundFarbe(x, y, xKlein, yKlein)
     @spielfeld[y][x].baumVordergrundFarbe(xKlein, yKlein)
