@@ -118,4 +118,13 @@ class Spielfeld
     end
   end
 
+  def summeFeuer()
+    @spielfeld.reduce(0) do |summe, zeile|
+      summe + zeile.reduce(0) do |zwischenSumme, feld|
+        zwischenSumme += feld.brandSchaden() if feld.class == WegStuecke
+        zwischenSumme
+      end
+    end
+  end
+
 end

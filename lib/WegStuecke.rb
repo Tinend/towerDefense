@@ -1,5 +1,6 @@
 require 'WegStueck'
 require 'Feind'
+require 'Sonderfaehigkeit'
 
 class WegStuecke
   def initialize()
@@ -82,7 +83,7 @@ class WegStuecke
   end
 
   def farbe()
-    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and @brennen < Feind::VerbrennFaktor
+    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and @brennen < Sonderfaehigkeit::GegnerVerbrennFaktor
       return Weiss
     elsif @wegStuecke.all? {|wegStueck| wegStueck.feinde == []}
       return Rot
@@ -91,6 +92,10 @@ class WegStuecke
     end
   end
 
+  def brandSchaden()
+    @wegStuecke.length * (@brennen / Sonderfaehigkeit::GegnerVerbrennFaktor)
+  end
+  
   def wegStueck()
     ziel = nil
     @wegStuecke.each do |ws|

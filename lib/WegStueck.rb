@@ -1,4 +1,5 @@
 require 'Feind'
+require 'Sonderfaehigkeit'
 
 class WegStueck
   
@@ -22,7 +23,7 @@ class WegStueck
   end
   
   def farbe()
-    if @feinde == [] and @brennen < Feind::VerbrennFaktor
+    if @feinde == [] and @brennen < Sonderfaehigkeit::GegnerVerbrennFaktor
       return Weiss
     elsif @feinde == []
       return Rot

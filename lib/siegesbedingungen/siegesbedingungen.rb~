@@ -1,0 +1,9 @@
+require 'siegesbedingungen/SchadenSiegesbedingung'
+require 'siegesbedingungen/InstaDeathSiegesbedingung'
+
+def erstelleSiegesbedingungen(gegnerErsteller, spieler)
+  [
+    SchadenSiegesbedingung.new(gegnerErsteller, spieler),
+    InstaDeathSiegesbedingung.new(gegnerErsteller, spieler)
+  ]
+end

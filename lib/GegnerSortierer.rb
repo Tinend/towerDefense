@@ -5,10 +5,13 @@ class GegnerSortierer
 
   def zielFinden(position, reichweite, gegnerArray)
     ordnungsArray = gegnerArray.gegner.map {|gegner| @ordnung.new(gegner)}
-    ordnungsArray.delete_if{|ordnung|
+    ordnungsArray.delete_if do |ordnung|
       x, y = ordnung.gegner.position
       (x - position[0]) ** 2 + (y - position[1]) ** 2 > reichweite ** 2
-    }
+    end
+    ordnungsArray.delete_if do |ordnung|
+      ordnung.gegner.leben <= 0
+    end
     return nil if ordnungsArray.length == 0
     ordnungsArray.sort!
     ordnungsArray[-1].gegner
@@ -16,6 +19,9 @@ class GegnerSortierer
 
   def multiZielFinden(position, reichweite, gegnerArray)
     ordnungsArray = gegnerArray.gegner.map {|gegner| @ordnung.new([gegner])}
+    ordnungsArray.delete_if do |ordnung|
+      ordnung.gegner[0].leben <= 0
+    end
     moeglicheZiele = ordnungsArray.reduce([]) do |array, ordnung|
       if array.length > 0 and array[-1].zusammenfuegbar?(ordnung)
         array[-1] = array[-1] + ordnung
@@ -23,6 +29,9 @@ class GegnerSortierer
         array.push(ordnung)
       end
       array
+    end
+    moeglicheZiele.delete_if do |ordnung|
+      weitWeg?(ordnung.gegner[0].position, position, reichweite)
     end
     return [] if moeglicheZiele == []
     ziele = moeglicheZiele[-1]

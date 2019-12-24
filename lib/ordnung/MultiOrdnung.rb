@@ -18,4 +18,10 @@ class MultiOrdnung
   def zusammenfuegbar?(multiOrdnung)
     @gegner[0].position == multiOrdnung.gegner[0].position
   end
+
+  def nullLpEntfernen()
+    @gegner.delete_if do |g|
+      g.leben <= 0
+    end
+  end
 end

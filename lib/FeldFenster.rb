@@ -1,10 +1,9 @@
 include Curses
 require 'colorize'
 require 'Baum'
+require 'Sonderfaehigkeit'
 
-class FeldFenster
-  BonusLeben = 3
-  
+class FeldFenster  
   def initialize(verschiebungy, verschiebungx, spielfeld, baumErsteller, menues, leiste, spieler)
     @spieler = spieler
     @hoehe = spielfeld.hoehe
@@ -162,7 +161,7 @@ class FeldFenster
           wahl = @menues[:baumUpgradeFensterBuilder].waehlen(baum)
           if wahl != :nichts
             @spieler.upgradeBezahlen(baum.level)
-            @spieler.leben += BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
+            @spieler.leben += Sonderfaehigkeit::BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
             @baumLevel[baum.level - 1] -= 1
             @baumLevel[baum.level] += 1
           end
@@ -189,7 +188,7 @@ class FeldFenster
         baum = @spielfeld.gibBaum(@position[0], @position[1])
         wahl = @menues[:baumUpgradeFensterBuilder].waehlen(baum)
         if wahl != :nichts
-          @spieler.leben += BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
+          @spieler.leben += Sonderfaehigkeit::BonusLeben if baum.hatUpgrade?(HeilungsSonderfaehigkeit.bedingung)
           @baumLevel[baum.level - 1] -= 1
           @baumLevel[baum.level] += 1
           @spielerAktiv = false

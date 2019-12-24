@@ -3,12 +3,9 @@ require 'FarbZeichen'
 require 'farben'
 
 class Feind
+  
   MaxLaufErsparnis = 10
-  MaxVerlangsamungsCounter = 30
-  MaxVergiftungsCounter = 100
-  MaxVereisungsCounter = 100
-  VerbrennFaktor = 20
-  MaxKrank = 100
+  
   PflanzenBild = [
     "\\ A /",
     "~(o)~",
@@ -32,9 +29,11 @@ class Feind
     @verlangsamungsCounter = 0
     @vergiftungsCounter = 0
     @gift = 0
+    @vergifter = nil
     @vereisungsCounter = 0
     @start = wegStueck
     @krank = 0
+    @infizierer = nil
     @bildNummer = maxLeben
     @heilt = false
   end
@@ -58,24 +57,26 @@ class Feind
     return @wegStueck == nil
   end
 
-  def erkranken(schaden)
+  def erkranken(schaden, baum)
     neuKrank = schaden * (0.1 + @maxLeben / 100000.0)
+    @infizierer = baum if neuKrank > @krank
     @krank = [@krank, neuKrank].max
   end
   
   def verlangsamen()
-    @verlangsamungsCounter = MaxVerlangsamungsCounter
+    @verlangsamungsCounter = Sonderfaehigkeit::GegnerMaxVerlangsamungsCounter
   end
   
-  def vergiften(gift)
+  def vergiften(gift, baum)
     if gift > @gift
-      @vergiftungsCounter = MaxVergiftungsCounter
+      @vergiftungsCounter = Sonderfaehigkeit::GegnerMaxVergiftungsCounter
       @gift = gift
+      @vergifter = baum
     end
   end
 
   def vereisen()
-    @vereisungsCounter = MaxVereisungsCounter
+    @vereisungsCounter = Sonderfaehigkeit::GegnerMaxVereisungsCounter
   end
 
   def versteinern()
@@ -96,9 +97,12 @@ class Feind
   end
   
   def laufen()
-    @leben -= (@krank + rand(0)).to_i
+    krankSchaden = (@krank + rand(0)).to_i
+    @leben -= krankSchaden
+    @infizierer.gesamtSchaden += krankSchaden if krankSchaden > 0
     if @vergiftungsCounter > 0
       schaden = (@gift.to_f / @vergiftungsCounter + rand(0)).to_i
+      @vergifter.gesamtSchaden += schaden
       @leben -= schaden
       @gift -= schaden
       @vergiftungsCounter -= 1
@@ -126,7 +130,10 @@ class Feind
       @wegStueck = @wegStueck.naechstes
       if @wegStueck != nil
         @wegStueck.feinde.push(self)
-        @leben -= @wegStueck.brennen / VerbrennFaktor
+        if @wegStueck.brennen / Sonderfaehigkeit::GegnerVerbrennFaktor >= 1
+          @leben -= @wegStueck.brennen / Sonderfaehigkeit::GegnerVerbrennFaktor
+          @geschwindigkeit *= Sonderfaehigkeit::GegnerVerbrennungsVerlangsamung
+        end
       end
     end
   end

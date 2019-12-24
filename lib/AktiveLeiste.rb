@@ -42,10 +42,12 @@ class AktiveLeiste
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr("    A/\\    ")
       }
+      @window.addstr(" ")
       @window.setpos(1, verschiebung)
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr("\\  //  \\   ")
       }
+      @window.addstr(" ")
       @window.setpos(2, verschiebung)
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr("_\\")
@@ -53,6 +55,7 @@ class AktiveLeiste
       @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
         @window.addstr(" O==== ~ ")
       }
+      @window.addstr(" ")
       @window.setpos(3, verschiebung)
       @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
         @window.addstr("  ()-()")
@@ -60,6 +63,7 @@ class AktiveLeiste
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr("Y  Y")
       }     
+      @window.addstr(" ")
       schussrate = baum.maxLaden().to_s
       @window.setpos(1, verschiebung + 12)
       @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
@@ -78,7 +82,7 @@ class AktiveLeiste
       end
       @window.setpos(2, verschiebung + 12)
       @window.addstr("->:")
-      reichweite = baum.reichweite().to_s
+      reichweite = [baum.reichweite(), 99.9].min.to_s
       @window.addstr(" " * (4 - reichweite.length) + reichweite)
       if baum.reichweiteBoost
         @window.setpos(2, verschiebung + 19)
@@ -90,8 +94,8 @@ class AktiveLeiste
         @window.addstr(" ")
       end
       @window.setpos(0, verschiebung + 21)
-      feuer = baum.berechneSchaden(:feuer).to_s
-      @window.addstr(" " * (3 - feuer.length))
+      feuer = maxIntToString(baum.berechneSchaden(:feuer), 10**4)
+      @window.addstr(" " * [(3 - feuer.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
         @window.addstr(feuer)
       }
@@ -105,8 +109,8 @@ class AktiveLeiste
         @window.addstr(" ")
       end
       @window.setpos(1, verschiebung + 21)
-      pflanze = baum.berechneSchaden(:pflanze).to_s
-      @window.addstr(" " * (3 - pflanze.length))
+      pflanze = maxIntToString(baum.berechneSchaden(:pflanze), 10**4)
+      @window.addstr(" " * [(3 - pflanze.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr(pflanze)
       }
@@ -120,8 +124,8 @@ class AktiveLeiste
         @window.addstr(" ")
       end
       @window.setpos(2, verschiebung + 21)
-      wasser = baum.berechneSchaden(:wasser).to_s
-      @window.addstr(" " * (3 - wasser.length))
+      wasser = maxIntToString(baum.berechneSchaden(:wasser), 10**4)
+      @window.addstr(" " * [(3 - wasser.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
         @window.addstr(wasser)
       }
@@ -135,13 +139,19 @@ class AktiveLeiste
         @window.addstr(" ")
       end
       @window.setpos(3, verschiebung + 12)
+      if baum.gesamtSchaden == 0
+        string = " " * 12
+      else
+        schadenString = maxIntToString(baum.gesamtSchaden, 10**12)
+        string = " " * (12 - schadenString.length) + schadenString
+      end
       baum.level().times do |upgradeNummer|
         farbe = baum.upgradeFarbe(upgradeNummer)
-        @window.attron(color_pair(berechneFarbe(farbe, farbe))|A_NORMAL) {
-          @window.addstr("  ")
+        @window.attron(color_pair(berechneFarbe(Weiss, farbe))|A_NORMAL) {
+          @window.addstr(string[upgradeNummer * 2 .. upgradeNummer * 2 + 1])
         }
       end
-      @window.addstr(" " * 2 * (4 - baum.level()))
+      @window.addstr(string[baum.level() * 2 .. 11])
     else
       4.times do |i|
         @window.setpos(i, verschiebung)
@@ -191,14 +201,8 @@ class AktiveLeiste
     string = "Anzahl Gegner:   #{@gegnerErsteller.anzahl}"
     string += " " * (24 - string.length)
     textBildUeberlagern(@window, verschiebung, 1, string, 0, 1, bild, schriftFarbe)
-    
-    if @gegnerErsteller.staerke >= 10**7
-      ziffern = Math::log(@gegnerErsteller.staerke, 10).to_i
-      signifikanteStellen = (@gegnerErsteller.staerke / (10 ** (ziffern - 1))).to_i / 10.0
-      staerkeString = signifikanteStellen.to_s + "e+" + ziffern.to_s
-    else
-      staerkeString = @gegnerErsteller.staerke.to_s
-    end
+
+    staerkeString = maxIntToString(@gegnerErsteller.staerke, 10**7)
     string = "Lebenspunkte:    " + staerkeString
     string += " " * (24 - string.length)
     textBildUeberlagern(@window, verschiebung, 2, string, 0, 2, bild, schriftFarbe)
@@ -218,6 +222,16 @@ class AktiveLeiste
     end
   end
 
+  def maxIntToString(int, max)
+    if int >= max
+      ziffern = Math::log(int, 10).to_i
+      signifikanteStellen = (int / (10 ** (ziffern - 1))).to_i / 10.0
+      return signifikanteStellen.to_s + "e+" + ziffern.to_s
+    else
+      return int.to_s
+    end
+  end
+  
   def phaseAnzeigen(verschiebung)
     text = "Bauphase"
     3.times do |i|
@@ -284,14 +298,21 @@ class AktiveLeiste
     @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
       @window.addstr(@feuer.to_s)
     }
-    if @feuer >= Feind::VerbrennFaktor
+    if @feuer >= Sonderfaehigkeit::GegnerVerbrennFaktor
       @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
-        @window.addstr(" (" + (@feuer / Feind::VerbrennFaktor).to_s + ")")
+        @window.addstr(" (" + (@feuer / Sonderfaehigkeit::GegnerVerbrennFaktor).to_s + ")")
       }
     else
       @window.addstr("     ")
     end
     @window.addstr("     ")
+  end
+
+  def siegAnzeigen(verschiebung)
+    Siegesbedingungen.each_with_index do |s, i|
+      @window.setpos(i, verschiebung)
+      @window.addstr(((s.fortschritt * 10).to_i / 10.0).to_s + "%")
+    end
   end
   
   def anzeigen(baum)
@@ -304,6 +325,7 @@ class AktiveLeiste
       feuerAnzeigen(30)
     end
     gegnerAnzeigen(57)
+    siegAnzeigen(140)
     @window.refresh()
   end
 

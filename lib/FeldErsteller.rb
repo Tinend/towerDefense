@@ -3,12 +3,27 @@ require 'WegStueck'
 require 'Feld'
 
 class GewichteteRichtung
+
+  KleineZahl = 0.01
+  
   def initialize(richtung, gewicht)
     @richtung = richtung
     @gewicht = gewicht
   end
 
-  attr_reader :gewicht, :richtung
+  attr_reader :richtung
+
+  def gewicht(position, hoehe, sollOst, breite)
+    if @richtung[0] == 0 and @richtung[1] == 1
+      return [@gewicht * (17.0 - position[1]) / 17.0, KleineZahl].max
+    elsif @richtung[0] == 0 and @richtung[1] == -1
+      return [@gewicht * (17.0 + position[1] - hoehe) / 17.0, KleineZahl].max
+    elsif @richtung[0] == 1
+      return [@gewicht * (breite + position[0] - sollOst.to_f) / breite, KleineZahl].max
+    elsif @richtung[0] == -1
+      return [@gewicht * (breite + sollOst.to_f - position[0]) / breite, KleineZahl].max
+    end
+  end
 end
 
 class FeldErsteller
@@ -17,10 +32,11 @@ class FeldErsteller
   VertikalFrei = :vertikal
   HorizontalFrei = :horizontal
   RichtungBehaltenWkeit = 50
-  Norden = GewichteteRichtung.new([0, 1], 9)
-  Sueden = GewichteteRichtung.new([0, -1], 9)
-  Osten = GewichteteRichtung.new([1, 0], 16)
-  Westen = GewichteteRichtung.new([-1, 0], 6)
+  Norden = GewichteteRichtung.new([0, 1], 20)
+  Sueden = GewichteteRichtung.new([0, -1], 20)
+  Osten = GewichteteRichtung.new([1, 0], 10)
+  Westen = GewichteteRichtung.new([-1, 0], 10)
+  LaengeProBreite = 3.0
   
   def initialize(breite)
     @trys = 0
@@ -96,11 +112,11 @@ class FeldErsteller
       @reset = true
       return nil
     end
-    sumGewicht = 0
-    richtungen.each {|gewichteteRichtung| sumGewicht += gewichteteRichtung.gewicht}
-    wahl = rand(sumGewicht)
+    sumGewicht = richtungen.reduce(0) {|sum, gewichteteRichtung| sum + gewichteteRichtung.gewicht(@position, @provisorischesSpielfeld.length, @nr / LaengeProBreite, @breite)}
+    wahl = rand(0) * sumGewicht
+    wahl2 = wahl
     richtungen.each do |gewichteteRichtung|
-      wahl -= gewichteteRichtung.gewicht
+      wahl -= gewichteteRichtung.gewicht(@position, @provisorischesSpielfeld.length, @nr / LaengeProBreite, @breite)
       if wahl < 0
         @richtung = gewichteteRichtung.richtung
         return nil
@@ -177,10 +193,14 @@ class FeldErsteller
   end
 
   def erstelleSpielfeld()
-    [0, 9 - @provisorischesSpielfeld.length / 2].max.times do
-    verschiebeUnten()
+    zeilen = @provisorischesSpielfeld.length
+    [0, 9 - zeilen / 2].max.times do
       verschiebeOben()
     end
+    [0, 9 - (zeilen + 1) / 2].max.times do
+      verschiebeUnten()
+    end
+    
     @spielfeld = []
     @provisorischesSpielfeld.each_with_index do |zeile, y|
       @spielfeld.push([])

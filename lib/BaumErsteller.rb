@@ -16,7 +16,11 @@ class BaumErsteller
   end
     
   def erstelleBaum(position)
-    Baum.new(REICHWEITE, position)
+    baum = Baum.new(REICHWEITE, position)
+    Siegesbedingungen.each do |s|
+      s.pflanze(baum)
+    end
+    baum
   end
 
   def reichweite()
