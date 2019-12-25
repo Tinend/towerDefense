@@ -39,7 +39,7 @@ class InaktiveLeiste
       zeichen = 0
       if gegner.versteinert?()
         @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
-          @window.addstr("🗿 ")
+          @window.addstr("⛰ ")
         }
         zeichen += 2
       end

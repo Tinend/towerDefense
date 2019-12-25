@@ -342,7 +342,7 @@ class AktiveLeiste
         @window.addstr(" ")
       end
       @window.setpos(2, verschiebung)
-      @window.addstr("—>:")
+      @window.addstr("→ :")
       reichweite = [baum.reichweite(), 99.9].min.to_s
       @window.addstr(" " * (4 - reichweite.length) + reichweite)
       if baum.reichweiteBoost
