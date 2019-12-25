@@ -11,7 +11,7 @@ class NutzenAnzeiger
     "Pfeiltasten:Bewege ausgewähltes Feld; Mit Ctrl schneller",
     "Enter:Verteidiger bauen/upgraden",
     "' ':Diese Hilfe anzeigen",
-    "Ctrl + ' ':Kaufphase beenden"
+    "Ctrl + ' ':Bauphase beenden"
   ]
   
   def initialize()

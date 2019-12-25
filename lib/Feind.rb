@@ -15,7 +15,7 @@ class Feind
     "   ) ",
     "  X  ",
     " (   "
-  ]
+  ]# benutze siddham
   
   def initialize(maxLeben, wegStueck, typ, geschwindigkeit)
     @leben = maxLeben
@@ -130,9 +130,9 @@ class Feind
       @wegStueck = @wegStueck.naechstes
       if @wegStueck != nil
         @wegStueck.feinde.push(self)
-        if @wegStueck.brennen / Sonderfaehigkeit::GegnerVerbrennFaktor >= 1
-          @leben -= @wegStueck.brennen / Sonderfaehigkeit::GegnerVerbrennFaktor
-          @geschwindigkeit *= Sonderfaehigkeit::GegnerVerbrennungsVerlangsamung
+        if @wegStueck.radioaktivitaet / Sonderfaehigkeit::GegnerStrahlFaktor >= 1
+          @leben -= @wegStueck.radioaktivitaet / Sonderfaehigkeit::GegnerStrahlFaktor
+          @geschwindigkeit *= Sonderfaehigkeit::GegnerVerstrahlungsVerlangsamung
         end
       end
     end
@@ -168,30 +168,30 @@ class Feind
   
   def feuerBild(x, y)
     if y == 2 and x == 2
-      return FarbZeichen.new(Gelb, Gelb, " ")
+      return FarbZeichen.new(Gelb, Gelb, " ", A_NORMAL)
     elsif y > 0 and 0 < x and x < 4
-      return FarbZeichen.new(Rot, Rot, " ")      
+      return FarbZeichen.new(Rot, Rot, " ", A_NORMAL)      
     elsif x == 0 and y == (-@bildNummer / 26) % 3
-      return FarbZeichen.new(Rot, Rot, " ")
+      return FarbZeichen.new(Rot, Rot, " ", A_NORMAL)
     elsif x == 0
-      return FarbZeichen.new(Blau, Blau, " ")
+      return FarbZeichen.new(Blau, Blau, " ", A_NORMAL)
     elsif x == 4 and y == (-@bildNummer / 28) % 3
-      return FarbZeichen.new(Rot, Rot, " ")
+      return FarbZeichen.new(Rot, Rot, " ", A_NORMAL)
     elsif x == 4
-      return FarbZeichen.new(Blau, Blau, " ")
+      return FarbZeichen.new(Blau, Blau, " ", A_NORMAL)
     elsif x % 3 == (@bildNummer / 34) % 3
-      return FarbZeichen.new(Rot, Rot, " ")
+      return FarbZeichen.new(Rot, Rot, " ", A_NORMAL)
     else
-      return FarbZeichen.new(Blau, Blau, " ")      
+      return FarbZeichen.new(Blau, Blau, " ", A_NORMAL)      
     end
   end
 
   def pflanzenBild(x, y)
-    FarbZeichen.new(Gruen, Blau, PflanzenBild[y][x])
+    FarbZeichen.new(Gruen, Blau, PflanzenBild[y][x], A_NORMAL)
   end
 
   def wasserBild(x,y)
-    FarbZeichen.new(Weiss, Blau, WasserBild[y][x])
+    FarbZeichen.new(Weiss, Blau, WasserBild[y][x], A_NORMAL)
   end
   
   def bild(x, y)

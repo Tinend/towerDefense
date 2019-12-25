@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'ordnung/StandardGegnerOrdnung'
 require 'farben'
 
@@ -10,24 +11,6 @@ class InaktiveLeiste
 
   def oeffnen()
     @window = Window.new(@hoehe, @breite, 0, 0)
-  end
-
-  def lebenAnzeigen(verschiebung)
-    herz = @spieler.herz()
-    herz.each_with_index do |zeile, y|
-      zeile.length.times do |x|
-        @window.setpos(y, x + verschiebung)
-        if zeile[x] == "#"
-          @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-            @window.addstr(" ")
-          }
-        elsif zeile[x] != " "
-          @window.attron(color_pair(berechneFarbe(Gelb, Rot))|A_NORMAL) {
-            @window.addstr(zeile[x])
-          }
-        end
-      end
-    end
   end
 
   def gegnerLebenAnzeigen(verschiebung)
@@ -56,41 +39,61 @@ class InaktiveLeiste
       zeichen = 0
       if gegner.versteinert?()
         @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
-          @window.addstr("=")
+          @window.addstr("🗿 ")
         }
-        zeichen += 1
+        zeichen += 2
       end
       if gegner.krank > 0
-        @window.attron(color_pair(berechneFarbe(Schwarz, Weiss))|A_NORMAL) {
-          @window.addstr("!")
+        @window.attron(color_pair(berechneFarbe(Schwarz, Gelb))|A_NORMAL) {
+          @window.addstr("☣ ")
         }
-        zeichen += 1
+        zeichen += 2
       end
       if gegner.vereisungsCounter > 0
         @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
-          @window.addstr("*")
+          @window.addstr("")
         }
         zeichen += 1
       end
       if gegner.vergiftungsCounter > 0
         @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
-          @window.addstr(":")
+          @window.addstr("")
         }
         zeichen += 1
       end
       if gegner.verlangsamungsCounter > 0
-        @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
-          @window.addstr("#")
+        @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+          @window.addstr("🕸 ")
         }
-        zeichen += 1
+        zeichen += 2
       end
       @window.addstr(" " * (10 - zeichen))
       @window.refresh()
     end
   end
   
+  def lebenAnzeigen(verschiebung)
+    lpString = @spieler.leben.to_s
+    lpString = " " * [5 - lpString.length, 0].max + lpString[0..4]
+    @window.setpos(1, verschiebung)
+    @window.addstr(lpString)
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("")
+    }    
+  end
+
+  def geldAnzeigen(verschiebung)
+    @window.setpos(2, verschiebung)
+    gold = @spieler.gold.to_s
+    @window.addstr(" " * (5 - gold.length) + gold)
+    @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
+      @window.addstr("$")
+    }
+  end
+  
   def anzeigen()
     lebenAnzeigen(2)
+    geldAnzeigen(2)
     gegnerLebenAnzeigen(11)
   end
   

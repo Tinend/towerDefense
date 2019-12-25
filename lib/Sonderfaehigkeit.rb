@@ -33,20 +33,21 @@ class Sonderfaehigkeit
   GegnerMaxVerlangsamungsCounter = 30
   GegnerMaxVergiftungsCounter = 100
   GegnerMaxVereisungsCounter = 100
-  GegnerVerbrennFaktor = 30
-  GegnerVerbrennungsVerlangsamung = 0.97
+  GegnerStrahlFaktor = 30
+  GegnerVerstrahlungsVerlangsamung = 0.97
   
-  def initialize(bedingung, beschreibung, vordergrundFarbe, hintergrundFarbe, bild, hintergrundDurchsetzungsvermoegen)
+  def initialize(bedingung, beschreibung, vordergrundFarbe, hintergrundFarbe, bild, hintergrundDurchsetzungsvermoegen, effekt)
     @bedingung = bedingung
     @beschreibung = beschreibung
     @vordergrundFarbe = vordergrundFarbe
     @hintergrundFarbe = hintergrundFarbe
     @bild = bild
     @hintergrundDurchsetzungsvermoegen = hintergrundDurchsetzungsvermoegen
+    @effekt = effekt
   end
 
   def aussehenAn(x, y)
-    [@vordergrundFarbe, @hintergrundFarbe, @bild[y][x]]
+    [@vordergrundFarbe, @hintergrundFarbe, @bild[y][x], @effekt]
   end
   
   attr_reader :bedingung, :hintergrundDurchsetzungsvermoegen, :beschreibung

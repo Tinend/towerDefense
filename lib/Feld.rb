@@ -14,7 +14,7 @@ class Feld
     false
   end
 
-  def brennen()
+  def radioaktivitaet()
     0
   end
   
@@ -38,8 +38,14 @@ class Feld
     baum.hintergrundFarbe(x, y, farbe)
   end
   
+  def baumEffekt(x, y)
+    #p [x, y, baum.effekt(x, y)]
+    baum.effekt(x, y)
+  end
+
   def baumZeichen(x, y)
     baum.zeichen(x, y)
   end
+  
 end
 

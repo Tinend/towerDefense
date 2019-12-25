@@ -38,12 +38,12 @@ class Leiste
   end
 
   def bauPhaseAnfangen()
-    @aktiveLeiste.feuer = 0
+    @aktiveLeiste.radioaktivitaet = 0
     @aktiveLeiste.bauPhase = true
   end
 
-  def bauPhaseBeenden(feuer)
-    @aktiveLeiste.feuer = feuer
+  def bauPhaseBeenden(radioaktivitaet)
+    @aktiveLeiste.radioaktivitaet = radioaktivitaet
     @aktiveLeiste.bauPhase = false
   end
 end

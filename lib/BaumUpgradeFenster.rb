@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'BaumUpgradeFenster'
 require 'zeileFuerZeile'
 
@@ -22,7 +23,7 @@ class BaumUpgradeFenster
 
   def anzeigen()
     @fenster.setpos(0,0)
-    @fenster.addstr("/" + "-" * (@fensterBreite - 2) + "\\")
+    @fenster.addstr("/" + "—" * (@fensterBreite - 2) + "\\")
     @fenster.setpos(2, 12)
     @fenster.addstr("Schussrate:      " + @baum.maxLaden().to_s)
     @fenster.addstr("   ")
@@ -48,11 +49,11 @@ class BaumUpgradeFenster
     }
     @fenster.addstr("   ")
     @fenster.setpos(8,16)
-    @fenster.addstr("+--+--+--+--+")
+    @fenster.addstr("+——+——+——+——+")
     @fenster.setpos(9,16)
     @fenster.addstr("|  |  |  |  |")
     @fenster.setpos(10,16)
-    @fenster.addstr("+--+--+--+--+")
+    @fenster.addstr("+——+——+——+——+")
     4.times do |i|
       @fenster.setpos(9, 17 + 3 * i)
       farbe = berechneFarbe(Gelb, @baum.upgradeFarbe(i))
@@ -86,7 +87,7 @@ class BaumUpgradeFenster
       @fenster.addstr("|")
     end
     @fenster.setpos(@fensterHoehe - 1, 0)
-    @fenster.addstr("\\" + "-" * (@fensterBreite - 2) + "/")
+    @fenster.addstr("\\" + "—" * (@fensterBreite - 2) + "/")
     @fenster.setpos(0,0)
   end
 

@@ -8,14 +8,14 @@ class WegStueck
     @naechstes = naechstes
     @feinde = []
     @position = [0, 0]
-    @brennen = 0
+    @radioaktivitaet = 0
   end
 
-  attr_reader :nr, :naechstes, :brennen
+  attr_reader :nr, :naechstes, :radioaktivitaet
   attr_accessor :feinde, :position
   
-  def anzuenden()
-    @brennen += 1
+  def verstrahlen()
+    @radioaktivitaet += 1
   end
 
   def nummern
@@ -23,7 +23,7 @@ class WegStueck
   end
   
   def farbe()
-    if @feinde == [] and @brennen < Sonderfaehigkeit::GegnerVerbrennFaktor
+    if @feinde == [] and @radioaktivitaet < Sonderfaehigkeit::GegnerStrahlFaktor
       return Weiss
     elsif @feinde == []
       return Rot

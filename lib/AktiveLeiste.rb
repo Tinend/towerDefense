@@ -15,6 +15,7 @@ class AktiveLeiste
   SchadenFaktorGelb = 0.9
   SchadenFaktorRot = 0.5
 
+  SchadenBreite = 4
   
   def initialize(hoehe, breite, gegnerErsteller, spieler)
     @hoehe = hoehe
@@ -22,10 +23,10 @@ class AktiveLeiste
     @gegnerErsteller = gegnerErsteller
     @bauPhase = true
     @spieler = spieler
-    @feuer = feuer
+    @radioaktivitaet = radioaktivitaet
   end
 
-  attr_accessor :bauPhase, :feuer
+  attr_accessor :bauPhase, :radioaktivitaet
   
   def oeffnen(baumLevel)
     @baumLevel = baumLevel
@@ -35,115 +36,376 @@ class AktiveLeiste
   def schliessen
     @window.close()
   end
+
+  def baumBildAnzeigen(baum, verschiebung)
+    if baum.level == 0
+      baumLevel0Anzeigen(verschiebung)
+    elsif baum.level == 1
+      baumLevel1Anzeigen(verschiebung)
+    elsif baum.level == 2
+      baumLevel2Anzeigen(verschiebung)
+    elsif baum.level == 3
+      baumLevel3Anzeigen(verschiebung)
+    elsif baum.level == 4
+      baumLevel4Anzeigen(verschiebung)
+    else
+      raise
+    end
+  end
+
+  def baumLevel0Anzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\  //  \\   ")
+    }
+    @window.addstr(" ")
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr(" o———")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("¯")
+    }   
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("~  ")
+    }
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("  ()()")
+    }
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("|")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 🌾 ")
+    }     
+    @window.addstr(" ")
+  end
+  
+  def baumLevel1Anzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\  //  \\   ")
+    }
+    @window.addstr(" ")
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr(" O———— ~ ")
+    }
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("  ()—()")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 🌾 ")
+    }     
+    @window.addstr(" ")
+  end
+  
+  def baumLevel2Anzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\  //  \\   ")
+    }
+    @window.addstr(" ")
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr(" O===== ~")
+    }
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("  ()——()")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr(" 🌾 ")
+    }     
+    @window.addstr(" ")
+  end
+  
+  def baumLevel3Anzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\ ")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("ߍ__")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      #@window.addstr("/")
+    }   
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("___")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      #@window.addstr("\\")
+    }   
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("_ ~")
+    }
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("V——————~ ")
+    }
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("  ()——()")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr(" 🌾 ")
+    }     
+    @window.addstr(" ")
+  end
+  
+  def baumLevel4Anzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\ ")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("𐘠————————")
+    }
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("V————————")
+    }
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
+      @window.addstr("  ()———()")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 ")
+    }     
+    @window.addstr(" ")
+  end
+
+  def wegBildAnzeigen(verschiebung)#Krokodil: 🐊
+    @window.setpos(0, verschiebung)#◥█◤◣◢
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr(" 🌾 ")
+    }    
+    @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
+      @window.addstr("◢█◣ ")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 🌾 ")
+    }    
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 ")
+    }    
+    @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
+      @window.addstr("◢███◣ ")
+    }   
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾  ")
+    }    
+    @window.addstr(" ")
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
+      @window.addstr(" ◢█")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Blau))|A_NORMAL) {
+      @window.addstr("🐊  ")
+    }    
+    @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
+      @window.addstr("█◣")
+    }   
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾  ")
+    }    
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
+      @window.addstr("◢███████◣  ")
+    }   
+    @window.addstr(" ")
+  end
+  
+  def feldBildAnzeigen(baum, verschiebung)
+    if baum != nil and baum.reichweite() > 0
+      baumBildAnzeigen(baum, verschiebung)
+    elsif baum == nil
+      wegBildAnzeigen(verschiebung)
+    elsif baum.reichweite == 0
+      leeresFeldAnzeigen(verschiebung)
+    else
+      4.times do |i|
+        @window.setpos(i, verschiebung)
+        @window.addstr(" " * 12)
+      end
+    end
+  end
+
+  def leeresFeldAnzeigen(verschiebung)
+    @window.setpos(0, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("    𐘠/\\    ")
+    }
+    @window.addstr(" ")
+    @window.setpos(1, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("\\  //  \\   ")
+    }
+    @window.addstr(" ")
+    @window.setpos(2, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("_\\")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("/_=")
+    }
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("||")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("¯   ")
+    }   
+    @window.addstr(" ")
+    @window.setpos(3, verschiebung)
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("𐂂")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("   ")
+    }
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("᰼||")
+    }
+    @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
+      @window.addstr("🌾 🌾 ")
+    }     
+    @window.addstr(" ")
+  end
                   
   def baumAnzeigen(baum, verschiebung)
     if baum != nil and baum.reichweite() > 0
-      @window.setpos(0, verschiebung)
-      @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
-        @window.addstr("    A/\\    ")
-      }
-      @window.addstr(" ")
-      @window.setpos(1, verschiebung)
-      @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
-        @window.addstr("\\  //  \\   ")
-      }
-      @window.addstr(" ")
-      @window.setpos(2, verschiebung)
-      @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
-        @window.addstr("_\\")
-      }
-      @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
-        @window.addstr(" O==== ~ ")
-      }
-      @window.addstr(" ")
-      @window.setpos(3, verschiebung)
-      @window.attron(color_pair(berechneFarbe(Weiss, Schwarz))|A_NORMAL) {
-        @window.addstr("  ()-()")
-      }
-      @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
-        @window.addstr("Y  Y")
-      }     
-      @window.addstr(" ")
       schussrate = baum.maxLaden().to_s
-      @window.setpos(1, verschiebung + 12)
+      @window.setpos(1, verschiebung)
       @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
-        @window.addstr("ZZ")
+        @window.addstr("⚡")
       }
       @window.addstr(":")
-      @window.addstr(" " * (4 - schussrate.length) + schussrate)
+      @window.addstr(" " * (5 - schussrate.length) + schussrate)
       if baum.geschwindigkeitsBoost
-        @window.setpos(1, verschiebung + 19)
+        @window.setpos(1, verschiebung + 7)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       else
-        @window.setpos(1, verschiebung + 19)
+        @window.setpos(1, verschiebung + 7)
         @window.addstr(" ")
       end
-      @window.setpos(2, verschiebung + 12)
-      @window.addstr("->:")
+      @window.setpos(2, verschiebung)
+      @window.addstr("—>:")
       reichweite = [baum.reichweite(), 99.9].min.to_s
       @window.addstr(" " * (4 - reichweite.length) + reichweite)
       if baum.reichweiteBoost
-        @window.setpos(2, verschiebung + 19)
+        @window.setpos(2, verschiebung + 7)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       else
-        @window.setpos(2, verschiebung + 19)
+        @window.setpos(2, verschiebung + 7)
         @window.addstr(" ")
       end
-      @window.setpos(0, verschiebung + 21)
+      @window.addstr(" ")
+      @window.setpos(0, verschiebung + 9)
       feuer = maxIntToString(baum.berechneSchaden(:feuer), 10**4)
-      @window.addstr(" " * [(3 - feuer.length), 0].max)
+      @window.addstr(" " * [(SchadenBreite - feuer.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
         @window.addstr(feuer)
       }
       if baum.staerkeBoost
-        @window.setpos(0, verschiebung + 24)
+        @window.setpos(0, verschiebung + 13)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       else
-        @window.setpos(0, verschiebung + 24)
+        @window.setpos(0, verschiebung + 13)
         @window.addstr(" ")
       end
-      @window.setpos(1, verschiebung + 21)
+      @window.setpos(1, verschiebung + 9)
       pflanze = maxIntToString(baum.berechneSchaden(:pflanze), 10**4)
-      @window.addstr(" " * [(3 - pflanze.length), 0].max)
+      @window.addstr(" " * [(SchadenBreite - pflanze.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Gruen, Schwarz))|A_NORMAL) {
         @window.addstr(pflanze)
       }
       if baum.staerkeBoost
-        @window.setpos(1, verschiebung + 24)
+        @window.setpos(1, verschiebung + 13)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       else
-        @window.setpos(1, verschiebung + 24)
+        @window.setpos(1, verschiebung + 13)
         @window.addstr(" ")
       end
-      @window.setpos(2, verschiebung + 21)
+      @window.setpos(2, verschiebung + 9)
       wasser = maxIntToString(baum.berechneSchaden(:wasser), 10**4)
-      @window.addstr(" " * [(3 - wasser.length), 0].max)
+      @window.addstr(" " * [(SchadenBreite - wasser.length), 0].max)
       @window.attron(color_pair(berechneFarbe(Blau, Schwarz))|A_NORMAL) {
         @window.addstr(wasser)
       }
       if baum.staerkeBoost
-        @window.setpos(2, verschiebung + 24)
+        @window.setpos(2, verschiebung + 13)
         @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
           @window.addstr("+")
         }
       else
-        @window.setpos(2, verschiebung + 24)
+        @window.setpos(2, verschiebung + 13)
         @window.addstr(" ")
       end
-      @window.setpos(3, verschiebung + 12)
+      @window.setpos(3, verschiebung)
       if baum.gesamtSchaden == 0
-        string = " " * 12
+        string = " " * 13
       else
         schadenString = maxIntToString(baum.gesamtSchaden, 10**12)
-        string = " " * (12 - schadenString.length) + schadenString
+        string = " " * (13 - schadenString.length) + schadenString
       end
       baum.level().times do |upgradeNummer|
         farbe = baum.upgradeFarbe(upgradeNummer)
@@ -151,11 +413,11 @@ class AktiveLeiste
           @window.addstr(string[upgradeNummer * 2 .. upgradeNummer * 2 + 1])
         }
       end
-      @window.addstr(string[baum.level() * 2 .. 11])
+      @window.addstr(string[baum.level() * 2 .. 12])
     else
       4.times do |i|
         @window.setpos(i, verschiebung)
-        @window.addstr(" " * 28)
+        @window.addstr(" " * 17)
       end
     end
   end
@@ -239,73 +501,52 @@ class AktiveLeiste
       @window.addstr(" " * 21)
     end
     @window.setpos(0, verschiebung + (13 - text.length) / 2)
-    @window.addstr("+" + "-" * text.length + "+")
+    @window.addstr("+" + "—" * text.length + "+")
     @window.setpos(1, verschiebung + (13 - text.length) / 2)
     @window.addstr("|" + text + "|")
     @window.setpos(2, verschiebung + (13 - text.length) / 2)
-    @window.addstr("+" + "-" * text.length + "+")
+    @window.addstr("+" + "—" * text.length + "+")
   end
 
   def lebenAnzeigen(verschiebung)
-    herz = @spieler.herz()
-    herz.each_with_index do |zeile, y|
-      zeile.length.times do |x|
-        @window.setpos(y, x + verschiebung)
-        if zeile[x] == "#"
-          @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-            @window.addstr(" ")
-          }
-        elsif zeile[x] != " "
-          @window.attron(color_pair(berechneFarbe(Gelb, Rot))|A_NORMAL) {
-            @window.addstr(zeile[x])
-          }
-        end
-      end
-    end
+    lpString = @spieler.leben.to_s
+    lpString = " " * [5 - lpString.length, 0].max + lpString[0..4]
+    @window.setpos(1, verschiebung)
+    @window.addstr(lpString)
+    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+      @window.addstr("")
+    }    
   end
 
   def geldAnzeigen(verschiebung)
-    @window.setpos(1, verschiebung)
+    @window.setpos(2, verschiebung)
     gold = @spieler.gold.to_s
     @window.addstr(" " * (5 - gold.length) + gold)
     @window.attron(color_pair(berechneFarbe(Gelb, Schwarz))|A_NORMAL) {
       @window.addstr("$")
     }
   end
-
-  def feuerAnzeigen(verschiebung)
-    @window.setpos(0, verschiebung + 1)
-    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-      @window.addstr(" ")
-    }
-    @window.setpos(1, verschiebung)
-    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-      @window.addstr("   ")
-    }
-    @window.setpos(2, verschiebung)
-    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-      @window.addstr("   ")
-    }
-    @window.setpos(2, verschiebung + 1)
-    @window.attron(color_pair(berechneFarbe(Gelb, Gelb))|A_NORMAL) {
-      @window.addstr(" ")
-    }
-    @window.setpos(3, verschiebung + 1)
-    @window.attron(color_pair(berechneFarbe(Rot, Rot))|A_NORMAL) {
-      @window.addstr(" ")
-    }
-    @window.setpos(2, verschiebung + 4)
-    @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
-      @window.addstr(@feuer.to_s)
-    }
-    if @feuer >= Sonderfaehigkeit::GegnerVerbrennFaktor
-      @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
-        @window.addstr(" (" + (@feuer / Sonderfaehigkeit::GegnerVerbrennFaktor).to_s + ")")
+  
+  def radioaktivitaetAnzeigen(verschiebung)#Feuer: 🔥
+    if @radioaktivitaet > 0 # Radioaktivität: ☢
+      @window.setpos(2, verschiebung)
+      @window.addstr(" " * (7 - [@radioaktivitaet, 9999999].min.to_s.length))
+      @window.addstr([@radioaktivitaet, 9999999].min.to_s + " ")
+      if @radioaktivitaet >= Sonderfaehigkeit::GegnerStrahlFaktor
+        @window.addstr("(" + (@radioaktivitaet / Sonderfaehigkeit::GegnerStrahlFaktor).to_s)
+        @window.attron(color_pair(berechneFarbe(Rot, Schwarz))|A_NORMAL) {
+          @window.addstr("")
+        }
+        @window.addstr(") ")
+      end
+      @window.attron(color_pair(berechneFarbe(Schwarz, Gelb))|A_NORMAL) {
+        @window.addstr("☢ ")
       }
-    else
+      if @radioaktivitaet < Sonderfaehigkeit::GegnerStrahlFaktor
+        @window.addstr("     ")
+      end
       @window.addstr("     ")
     end
-    @window.addstr("     ")
   end
 
   def siegAnzeigen(verschiebung)
@@ -319,13 +560,12 @@ class AktiveLeiste
     lebenAnzeigen(2)
     phaseAnzeigen(10)
     #phaseAnzeigen(3)
-    geldAnzeigen(23)
-    baumAnzeigen(baum, 30)
-    if @feuer > 0
-      feuerAnzeigen(30)
-    end
-    gegnerAnzeigen(57)
-    siegAnzeigen(140)
+    geldAnzeigen(2)
+    feldBildAnzeigen(baum, 23)
+    baumAnzeigen(baum, 35)
+    radioaktivitaetAnzeigen(35)
+    gegnerAnzeigen(51)
+    siegAnzeigen(134)
     @window.refresh()
   end
 

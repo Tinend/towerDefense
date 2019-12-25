@@ -3,6 +3,7 @@ require "curses"
 include Curses
 require 'colorize'
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'Zeichen'
 require 'FeldErsteller'
 require 'Spielfeld'
 require 'WegStueck'
@@ -22,11 +23,6 @@ require 'BaumUpgradeFensterBuilder'
 require 'Spieler'
 require 'Runde'
 require 'siegesbedingungen/siegesbedingungen'
-
-KEY_ENTER_REAL = 10
-KEY_SLEERZEICHEN = 0
-KEY_SUP = 337
-KEY_SDOWN = 336
 
 def change_pos(x, direction, min, max)
   x = (x + direction - min) % (max - min) + min

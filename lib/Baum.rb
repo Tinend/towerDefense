@@ -279,6 +279,10 @@ class Baum
     @upgrades.berechneUpgradeHintergrundFarbe(x, y, farbe)
   end
 
+  def effekt(x, y)
+    @upgrades.berechneEffekt(x, y)
+  end
+
   def zeichen(x, y)
     z = ""
     if x == 2 and y == 1
@@ -286,7 +290,7 @@ class Baum
     elsif x == 2
       z = "|"
     elsif y == 1
-      z = "-"
+      z = "—"
     else
       z = " "
     end

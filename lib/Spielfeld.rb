@@ -56,8 +56,8 @@ class Spielfeld
     @spielfeld[y][x].baum
   end
   
-  def gibFeuer(x,y)
-    @spielfeld[y][x].brennen
+  def gibRadioaktivitaet(x,y)
+    @spielfeld[y][x].radioaktivitaet
   end
 
   def baumVordergrundFarbe(x, y, xKlein, yKlein)
@@ -70,6 +70,10 @@ class Spielfeld
     
   def baumZeichen(x, y, xKlein, yKlein)
     @spielfeld[y][x].baumZeichen(xKlein, yKlein)
+  end
+    
+  def baumEffekt(x, y, xKlein, yKlein)
+    @spielfeld[y][x].baumEffekt(xKlein, yKlein)
   end
     
   def hoehe()
@@ -100,7 +104,7 @@ class Spielfeld
   def reagieren(typ, position)
     return if typ == :nichts
     if typ == :brennen
-      @spielfeld[position[1]][position[0]].anzuenden
+      @spielfeld[position[1]][position[0]].verstrahlen()
     end
   end
 
@@ -121,7 +125,7 @@ class Spielfeld
   def summeFeuer()
     @spielfeld.reduce(0) do |summe, zeile|
       summe + zeile.reduce(0) do |zwischenSumme, feld|
-        zwischenSumme += feld.brandSchaden() if feld.class == WegStuecke
+        zwischenSumme += feld.strahlenSchaden() if feld.class == WegStuecke
         zwischenSumme
       end
     end

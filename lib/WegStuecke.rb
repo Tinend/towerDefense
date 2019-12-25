@@ -5,15 +5,15 @@ require 'Sonderfaehigkeit'
 class WegStuecke
   def initialize()
     @wegStuecke = []
-    @brennen = 0
+    @radioaktivitaet = 0
   end
 
-  attr_reader :brennen
+  attr_reader :radioaktivitaet
   
-  def anzuenden()
-    @brennen += 1
+  def verstrahlen()
+    @radioaktivitaet += 1
     @wegStuecke.each do |wS|
-      wS.anzuenden()
+      wS.verstrahlen()
     end
   end
   
@@ -83,7 +83,7 @@ class WegStuecke
   end
 
   def farbe()
-    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and @brennen < Sonderfaehigkeit::GegnerVerbrennFaktor
+    if @wegStuecke.all? {|wegStueck| wegStueck.feinde == []} and @radioaktivitaet < Sonderfaehigkeit::GegnerStrahlFaktor
       return Weiss
     elsif @wegStuecke.all? {|wegStueck| wegStueck.feinde == []}
       return Rot
@@ -92,8 +92,8 @@ class WegStuecke
     end
   end
 
-  def brandSchaden()
-    @wegStuecke.length * (@brennen / Sonderfaehigkeit::GegnerVerbrennFaktor)
+  def strahlenSchaden()
+    @wegStuecke.length * (@radioaktivitaet / Sonderfaehigkeit::GegnerStrahlFaktor)
   end
   
   def wegStueck()

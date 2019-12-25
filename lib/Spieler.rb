@@ -1,3 +1,4 @@
+# coding: utf-8
 class Spieler
   
   MaxLeben = 20
@@ -8,6 +9,7 @@ class Spieler
   def initialize()
     @leben = MaxLeben
     @gold = 20
+    @gold += 1000 # entfernen
   end
 
   attr_accessor :leben
@@ -26,12 +28,12 @@ class Spieler
   end
 
   def herz()
-    mittelZeile = "#" * (4 - (@leben.to_s.length + 1) / 2) + @leben.to_s + "#" * (3 - @leben.to_s.length / 2)
+    mittelZeile = " " * (4 - (@leben.to_s.length + 1) / 2) + @leben.to_s + ""
     [
-      " ## ## ",
+      "       ",
       mittelZeile,
-      " ##### ",
-      "   #   "
+      "       ",
+      "       "
     ]
   end
 

@@ -40,9 +40,12 @@ class FeldFenster
       if @spielfeld.hatBaum?(@position[0], @position[1])
         baum = @spielfeld.gibBaum(@position[0], @position[1])
         @leiste.bauPhaseAnfangen()
-      else
-        @leiste.bauPhaseBeenden(@spielfeld.gibFeuer(@position[0], @position[1]))
+      elsif @spielfeld.istWeg?(@position[0], @position[1])
+        @leiste.bauPhaseBeenden(@spielfeld.gibRadioaktivitaet(@position[0], @position[1]))
         baum = nil
+      else
+        @leiste.bauPhaseBeenden(@spielfeld.gibRadioaktivitaet(@position[0], @position[1]))
+        baum = Baum.new(0, @position)
       end
       @leiste.aktivAnzeigen(baum)
     end
@@ -60,7 +63,8 @@ class FeldFenster
         @karte.setpos(y * HOEHENFAKTOR + yKlein, x * BREITENFAKTOR + xKlein)
         farbe = findeFarbe(x, y, xKlein, yKlein)
         string = findeZeichen(x, y, xKlein, yKlein)
-        @karte.attron(color_pair(farbe)|A_NORMAL){
+        effekt = findeEffekt(x, y, xKlein, yKlein)
+        @karte.attron(color_pair(farbe)|effekt){
           @karte.addstr(string)
         }
       end
@@ -107,6 +111,18 @@ class FeldFenster
     end
     return "+" if (xKlein == 0 or xKlein == 4) and (yKlein == 0 or yKlein == 2) and not @spielfeld.istWeg?(x, y)
     return " "
+  end
+  
+  def findeEffekt(x, y, xKlein, yKlein)
+    return A_BOLD if ((xKlein == 1 and yKlein == 0) or (xKlein == 3 and yKlein == 2)) and x == @position[0] and y == @position[1] and @spielerAktiv
+    return A_BOLD  if ((xKlein == 1 and yKlein == 2) or (xKlein == 3 and yKlein == 0)) and x == @position[0] and y == @position[1] and @spielerAktiv
+    return @spielfeld.feindBild(x, y, xKlein, yKlein).effekt if @spielfeld.istWeg?(x,y) and @spielfeld.hatFeind?(x,y)
+    return A_NORMAL if xKlein == 2 and yKlein == 1 and @spielfeld.istWeg?(x, y)
+    if @spielfeld.hatBaum?(x, y)
+      return @spielfeld.baumEffekt(x, y, xKlein, yKlein)
+    end
+    return A_NORMAL if (xKlein == 0 or xKlein == 4) and (yKlein == 0 or yKlein == 2) and not @spielfeld.istWeg?(x, y)
+    return A_NORMAL
   end
   
   def nah?(x, y)
@@ -202,16 +218,16 @@ class FeldFenster
 
   def eingeben()
     m = @karte.getch
-      if m == KEY_SUP
+    if m == KEY_SUP or m == KEY_CUP
       @position[1] -= 7
       @position[1] %= @hoehe
-    elsif m == KEY_SDOWN
+    elsif m == KEY_SDOWN or m == KEY_CDOWN
       @position[1] += 7
       @position[1] %= @hoehe
-    elsif m == KEY_SRIGHT
+    elsif m == KEY_SRIGHT or m == KEY_CRIGHT
       @position[0] += 7
       @position[0] %= @breite
-    elsif m == KEY_SLEFT
+    elsif m == KEY_SLEFT or m == KEY_CLEFT
       @position[0] -= 7
       @position[0] %= @breite
     elsif m == KEY_UP
@@ -228,7 +244,7 @@ class FeldFenster
       @position[0] %= @breite
     elsif m == KEY_ENTER_REAL
       return :bauen
-    elsif m == KEY_SLEERZEICHEN
+    elsif m == KEY_CLEERZEICHEN
       return :fertig
     elsif m == " "
       begin

@@ -59,7 +59,7 @@ class Upgrades
 
   def berechneUpgradeVordergrundFarbe(x, y, farbe)
     @sonderfaehigkeiten.reverse.each do |sf|
-      vordergrundFarbe, hintergrundFarbe, zeichen = sf.aussehenAn(x, y)
+      vordergrundFarbe, hintergrundFarbe, zeichen, effekt = sf.aussehenAn(x, y)
       if zeichen != " "
         return vordergrundFarbe
       end
@@ -69,7 +69,7 @@ class Upgrades
   
   def berechneUpgradeHintergrundFarbe(x, y, farbe)
     @sonderfaehigkeiten.reverse.each do |sf|
-      vordergrundFarbe, hintergrundFarbe, zeichen = sf.aussehenAn(x, y)
+      vordergrundFarbe, hintergrundFarbe, zeichen, effekt = sf.aussehenAn(x, y)
       if zeichen != " " and (farbe == Cyan or sf.hintergrundDurchsetzungsvermoegen)
         return hintergrundFarbe
       end
@@ -77,10 +77,22 @@ class Upgrades
     farbe
   end
   
+  def berechneEffekt(x, y)
+    @sonderfaehigkeiten.reverse.each do |sf|
+      vordergrundFarbe, hintergrundFarbe, zeichen, effekt = sf.aussehenAn(x, y)
+      if zeichen != " "
+        return effekt
+      end
+    end
+    A_NORMAL
+  end
+  
   def berechneUpgradeZeichen(x, y, zeichen)
     @sonderfaehigkeiten.reverse.each do |sf|
-      vordergundFarbe, hintergrundFarbe, zeichenSf = sf.aussehenAn(x, y)
-      if zeichenSf != " "
+      vordergundFarbe, hintergrundFarbe, zeichenSf, effekt = sf.aussehenAn(x, y)
+      if zeichenSf == "."
+        return " "
+      elsif zeichenSf != " "
         return zeichenSf
       end
     end
